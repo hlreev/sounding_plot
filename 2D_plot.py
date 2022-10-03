@@ -25,7 +25,7 @@ bbox = [np.min(lats) - lat_zoom_scale, np.max(lats) + lat_zoom_scale,\
 plt.figure(figsize=(12,6))
 # Define the projection, scale, the corners of the map, and the resolution.
 m = Basemap(projection = 'merc', llcrnrlat = bbox[0], urcrnrlat = bbox[1],\
-            llcrnrlon = bbox[2], urcrnrlon = bbox[3], lat_ts = 10, resolution = 'h') # c = crude, l = low, i = intermediate, h = high 
+            llcrnrlon = bbox[2], urcrnrlon = bbox[3], lat_ts = 10, resolution = 'f') # c = crude, l = low, i = intermediate, h = high, f = full
 
 # Draw the world around us
 m.fillcontinents(color = '#69b2a2', lake_color = '#A6CAE0') 
