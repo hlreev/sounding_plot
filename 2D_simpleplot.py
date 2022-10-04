@@ -3,12 +3,12 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from mpl_toolkits.basemap import Basemap
 from pyproj import geodesic_version_str
 os.environ['PROJ_LIB'] = '/Users/hunlr/anaconda3/envs/cartopy_env/Library/share/proj'
-from mpl_toolkits.basemap import Basemap
 
 # Read in data for usage
-filename = input("\nPlease enter the name of the sounding you want to plot (format: YYYYMMDD_TTz): ")
+filename = input("\nPlease enter the name of the sounding you want to plot (format: YYYYMMDD_HHz): ")
 data = pd.read_csv("data/" + filename + ".csv")
 print("Plotting data... this may take a second or two.")
 
@@ -37,17 +37,17 @@ m.drawcountries(color = '#595757', linewidth = 2)
 m.drawstates(color = '#827f7f', linewidth = 1.5)
 m.drawcounties()
 
-# draw parallels, meridians, and color boundaries
+# Draw parallels, meridians, and color boundaries
 m.drawparallels(np.arange(bbox[0] ,bbox[1] ,(bbox[1] - bbox[0]) / 5), labels = [1, 0, 0, 0])
 m.drawmeridians(np.arange(bbox[2], bbox[3], (bbox[3] - bbox[2]) / 5), labels = [0, 0 ,0 ,1], rotation = 45)
 m.drawmapboundary(fill_color='#87b5d4')
 
-# build and plot coordinates onto map
+# Build and plot coordinates onto map
 x, y = m(fwd[1], fwd[0]) # starting coordinates
 lats,lons = m(lons, lats) # sounding coordinates
 m.plot(x, y, marker = '*', color = '#ffea00', markersize = 12)
 m.plot(lats, lons, marker = '^', color = '#ed5a5a', markersize = 4)
 plt.title("2D Balloon Trajectory")
-plt.savefig(filename + '.png', format = "png", dpi = 500)
+plt.savefig('images/2D/' + filename + '.png', format = "png", dpi = 500)
 print("\nSuccess! Here is your plotted sounding data.")
 plt.show()
