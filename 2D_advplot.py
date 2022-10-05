@@ -1,10 +1,9 @@
 #!/usr/bin/python
 #  Author: Hunter L Reeves
-#    Date: 10/04/2022
+#    Date: 10/05/2022
 # Purpose: Plots 2D data points of a weather balloon on an advanced map with streeview data
 #  Github: https://github.com/hlreev/sounding_plot_3D
  
-from matplotlib.ft2font import FIXED_WIDTH
 import matplotlib.pyplot as plt 
 import numpy as np
 import cartopy.crs as ccrs
@@ -21,21 +20,56 @@ filename = input("\nPlease enter the name of the sounding you want to plot (form
 data = pd.read_csv("data/" + filename + ".csv")
 print("Plotting data... this may take a second or two.")
 
-# Parse out the data for usage
-lats = data["latitude"]
-lons = data["longitude"]
-alts = data["geometric_altitude"]
+# Create the base map
 fwd = [32.834885591464165, -97.29878202159327] # coordinates to the fort worth wfo
+sounding_plot = folium.Map(location = fwd,  zoom_start = 18, control_scale = True)
+
+# Add some additional map layers
+folium.TileLayer('cartodbpositron', name = "CartoDB Positron").add_to(sounding_plot)
+folium.TileLayer('cartodbdark_matter', name = "CartoDB DarkMatter").add_to(sounding_plot)
+folium.LayerControl().add_to(sounding_plot)
+
+# Release point for the balloon and location of FWD office
 upperair = [32.835088963714874, -97.29794483866789] # coordinates to the upper air bldg
-
-# Create a map using the Map() function
-m = folium.Map(location = fwd,  zoom_start = 18)
-
-# Release point for the balloon
-tooltip = "Balloon Release Site"
+_location = "Latitude: " + str(upperair[0]) + ", Longitude: " + str(upperair[1])
 folium.Marker(
-    upperair, popup="<i>FWD Upper Air</i>", tooltip=tooltip
-).add_to(m)
+    upperair, popup = _location, tooltip = "FWD Upper Air", 
+    icon = folium.Icon(color = "darkblue", icon_color = "white", icon = "glyphicon glyphicon-star")
+).add_to(sounding_plot)
+
+# Obtain and organize the data for the locations of balloon data
+altitudes = data["geometric_altitude"]
+altitudeList = altitudes.values.tolist() # Use for altitudes
+locations = data[['latitude', 'longitude']]
+locationList = locations.values.tolist() # Use for locations
+
+# Cycle through the data and add the balloon data points to the folium map
+size = len(locationList)
+for point in range(0, size):
+    # Clean up the code for accessing the data later on...
+    lats = locationList[point][0]
+    lons = locationList[point][1]
+    alts = altitudeList[point]
+    # New location message
+    _location = ("Lat. (°N): " + str(lats) + 
+                 ", Lon. (°E): " + str(lons) + 
+                 ", Alt. (m): " + str(alts))
+    # Plot the ascending balloon data points
+    folium.Marker(
+        locationList[point], popup = _location, tooltip = "Ascending Balloon",
+        icon = folium.Icon(color = "blue", icon_color = "white", icon = "glyphicon glyphicon-arrow-up")
+        ).add_to(sounding_plot)
+    # Termination location
+    if point == (size - 1):
+        folium.Marker(
+        locationList[point], popup = _location, tooltip = "Termination",
+        icon = folium.Icon(color = "red", icon_color = "white", icon = "glyphiconfglyphicon-remove-circle")
+        ).add_to(sounding_plot)
+
+# Create the trajectory of the weather balloon
+group = folium.FeatureGroup("Balloon Path")
+path = folium.PolyLine(locationList, color = "lightblue", weight = 10).add_to(group)
+group.add_to(sounding_plot)
 
 # Display the map in a web browser
-m.save("viewer/sounding-viewer-2D.html")
+sounding_plot.save("viewer/sounding_plot_2D.html")

@@ -49,7 +49,7 @@ m.drawmapboundary(fill_color='#87b5d4')
 
 # Build and plot coordinates onto map
 x, y = m(fwd[1], fwd[0]) # starting coordinates
-lats,lons = m(lons, lats) # sounding coordinates
+lats, lons = m(lons, lats) # sounding coordinates
 m.plot(x, y, marker = '*', color = '#ffea00', markersize = 12)
 m.plot(lats, lons, marker = '^', color = '#ed5a5a', markersize = 4)
 plt.title("2D Balloon Trajectory")
