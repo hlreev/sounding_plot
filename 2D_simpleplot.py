@@ -1,4 +1,9 @@
 #!/usr/bin/python
+#  Author: Hunter L Reeves
+#    Date: 10/04/2022
+# Purpose: Plots 2D data points of a weather balloon sounding on a simple basemap
+#  Github: https://github.com/hlreev/sounding_plot_3D
+
 import os
 import matplotlib.pyplot as plt
 import numpy as np
