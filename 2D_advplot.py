@@ -4,6 +4,7 @@
 # Purpose: Plots 2D data points of a weather balloon on an advanced map with streeview data
 #  Github: https://github.com/hlreev/sounding_plot_3D
  
+from json import tool
 import matplotlib.pyplot as plt 
 import numpy as np
 import cartopy.crs as ccrs
@@ -22,9 +23,10 @@ print("Plotting data... this may take a second or two.")
 
 # Create the base map
 fwd = [32.834885591464165, -97.29878202159327] # coordinates to the fort worth wfo
-sounding_plot = folium.Map(location = fwd,  zoom_start = 18, control_scale = True)
+sounding_plot = folium.Map(location = fwd,  zoom_start = 18, control_scale = True, tiles = None)
 
 # Add some additional map layers
+folium.TileLayer('openstreetmap', name = "OpenStreetMap").add_to(sounding_plot)
 folium.TileLayer('cartodbpositron', name = "CartoDB Positron").add_to(sounding_plot)
 folium.TileLayer('cartodbdark_matter', name = "CartoDB DarkMatter").add_to(sounding_plot)
 folium.LayerControl().add_to(sounding_plot)
@@ -59,17 +61,23 @@ for point in range(0, size):
         locationList[point], popup = _location, tooltip = "Ascending Balloon",
         icon = folium.Icon(color = "blue", icon_color = "white", icon = "glyphicon glyphicon-arrow-up")
         ).add_to(sounding_plot)
+    # Sounding successful to 400mb
+    if point == (size - 4): # fix hardcore lol this is for testing
+        folium.Marker(
+        locationList[point], popup = _location, tooltip = "Successful to 400mb",
+        icon = folium.Icon(color = "green", icon_color = "white", icon = "glyphicon glyphicon-ok")
+        ).add_to(sounding_plot)
     # Termination location
     if point == (size - 1):
         folium.Marker(
         locationList[point], popup = _location, tooltip = "Termination",
-        icon = folium.Icon(color = "red", icon_color = "white", icon = "glyphiconfglyphicon-remove-circle")
+        icon = folium.Icon(color = "red", icon_color = "white", icon = "glyphicon glyphicon-remove-circle")
         ).add_to(sounding_plot)
 
 # Create the trajectory of the weather balloon
-group = folium.FeatureGroup("Balloon Path")
-path = folium.PolyLine(locationList, color = "lightblue", weight = 10).add_to(group)
-group.add_to(sounding_plot)
+folium.PolyLine(
+    locationList, color = "lightblue", weight = "6", tooltip = "Balloon Path"
+    ).add_to(sounding_plot)
 
 # Display the map in a web browser
 sounding_plot.save("viewer/sounding_plot_2D.html")
