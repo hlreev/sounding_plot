@@ -62,7 +62,7 @@ for point in range(0, size):
         icon = folium.Icon(color = "blue", icon_color = "white", icon = "glyphicon glyphicon-arrow-up")
         ).add_to(sounding_plot)
     # Sounding successful to 400mb
-    if point == (size - 4): # fix hardcore lol this is for testing
+    if point == (size - 4): # fix hardcode lol this is for testing
         folium.Marker(
         locationList[point], popup = _location, tooltip = "Successful to 400mb",
         icon = folium.Icon(color = "green", icon_color = "white", icon = "glyphicon glyphicon-ok")
