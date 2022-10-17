@@ -47,6 +47,8 @@ locationList = locations.values.tolist() # Use for locations
 
 # Get the size of the list of locations for index information
 size = len(locationList)
+# Flag to check if 400mb has been reached
+check400mb = False
 # Cycle through the data and add the balloon data points to the folium map
 for point in range(0, size):
     # Clean up the code for accessing the data later on...
@@ -63,11 +65,13 @@ for point in range(0, size):
         icon = folium.Icon(color = "blue", icon_color = "white", icon = "glyphicon glyphicon-arrow-up")
         ).add_to(sounding_plot)
     # Sounding successful to 400mb, within a typical altitude range of this pressure height
-    if altitudeList[point] > 7100 and altitudeList[point] < 7600:
-        folium.Marker(
-        locationList[point], popup = _location, tooltip = "Successful to 400mb",
-        icon = folium.Icon(color = "green", icon_color = "white", icon = "glyphicon glyphicon-ok")
-        ).add_to(sounding_plot)
+    if check400mb == False:
+        if altitudeList[point] > 7250 and altitudeList[point] < 7500:
+            folium.Marker(
+            locationList[point], popup = _location, tooltip = "Successful to 400mb",
+            icon = folium.Icon(color = "green", icon_color = "white", icon = "glyphicon glyphicon-ok")
+            ).add_to(sounding_plot)
+            check400mb = True # 400mb reached, no longer need to plot successful points
     # Termination location (for now, it is the last data point - not entirely accurate)
     if point == (size - 1):
         folium.Marker(
