@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #  Author: Hunter L Reeves
-#    Date: 10/05/2022
+#    Date: 10/12/2022
 # Purpose: Plots 2D data points of a weather balloon on an advanced map with streeview data
 #  Github: https://github.com/hlreev/sounding_plot_3D
  
@@ -22,8 +22,8 @@ data = pd.read_csv("data/" + filename + ".csv")
 print("Plotting data... this may take a second or two.")
 
 # Create the base map
-fwd = [32.834885591464165, -97.29878202159327] # coordinates to the fort worth wfo
-sounding_plot = folium.Map(location = fwd,  zoom_start = 18, control_scale = True, tiles = None)
+fwd = [32.8350, -97.2986] # coordinates to the fort worth wfo
+sounding_plot = folium.Map(location = fwd,  zoom_start = 18, control_scale = True, tiles = False)
 
 # Add some additional map layers
 folium.TileLayer('openstreetmap', name = "OpenStreetMap").add_to(sounding_plot)
@@ -45,14 +45,15 @@ altitudeList = altitudes.values.tolist() # Use for altitudes
 locations = data[['latitude', 'longitude']]
 locationList = locations.values.tolist() # Use for locations
 
-# Cycle through the data and add the balloon data points to the folium map
+# Get the size of the list of locations for index information
 size = len(locationList)
+# Cycle through the data and add the balloon data points to the folium map
 for point in range(0, size):
     # Clean up the code for accessing the data later on...
-    lats = locationList[point][0]
-    lons = locationList[point][1]
-    alts = altitudeList[point]
-    # New location message
+    lats = locationList[point][0] # latitude values from the list
+    lons = locationList[point][1] # longitude values from the list
+    alts = altitudeList[point] # altitude values
+    # Information for each new data point in the plot
     _location = ("Lat. (°N): " + str(lats) + 
                  ", Lon. (°E): " + str(lons) + 
                  ", Alt. (m): " + str(alts))
@@ -61,13 +62,13 @@ for point in range(0, size):
         locationList[point], popup = _location, tooltip = "Ascending Balloon",
         icon = folium.Icon(color = "blue", icon_color = "white", icon = "glyphicon glyphicon-arrow-up")
         ).add_to(sounding_plot)
-    # Sounding successful to 400mb
-    if point == (size - 4): # fix hardcode lol this is for testing
+    # Sounding successful to 400mb, within a typical altitude range of this pressure height
+    if altitudeList[point] > 7100 and altitudeList[point] < 7600:
         folium.Marker(
         locationList[point], popup = _location, tooltip = "Successful to 400mb",
         icon = folium.Icon(color = "green", icon_color = "white", icon = "glyphicon glyphicon-ok")
         ).add_to(sounding_plot)
-    # Termination location
+    # Termination location (for now, it is the last data point - not entirely accurate)
     if point == (size - 1):
         folium.Marker(
         locationList[point], popup = _location, tooltip = "Termination",
