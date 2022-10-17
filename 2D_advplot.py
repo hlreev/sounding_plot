@@ -64,14 +64,16 @@ for point in range(0, size):
         locationList[point], popup = _location, tooltip = "Ascending Balloon",
         icon = folium.Icon(color = "blue", icon_color = "white", icon = "glyphicon glyphicon-arrow-up")
         ).add_to(sounding_plot)
-    # Sounding successful to 400mb, within a typical altitude range of this pressure height
+    # Check to see if a previous 400mb point has been plotted
     if check400mb == False:
+        # Sounding successful to 400mb, within a typical altitude range of this pressure height
         if altitudeList[point] > 7250 and altitudeList[point] < 7500:
             folium.Marker(
             locationList[point], popup = _location, tooltip = "Successful to 400mb",
             icon = folium.Icon(color = "green", icon_color = "white", icon = "glyphicon glyphicon-ok")
             ).add_to(sounding_plot)
-            check400mb = True # 400mb reached, no longer need to plot successful points
+            # 400mb reached, no longer need to plot successful points
+            check400mb = True
     # Termination location (for now, it is the last data point - not entirely accurate)
     if point == (size - 1):
         folium.Marker(
