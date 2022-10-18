@@ -3,18 +3,11 @@
 #    Date: 10/17/2022
 # Purpose: Plots 2D data points of a weather balloon on an advanced map with streeview data
 #  Github: https://github.com/hlreev/sounding_plot_3D
- 
-from json import tool
-import matplotlib.pyplot as plt 
-import numpy as np
-import cartopy.crs as ccrs
-import cartopy.io.img_tiles as cimgt
-import io
+
+# Code imports
 import pandas as pd
 import folium
 from folium import plugins
-from urllib.request import urlopen, Request
-from PIL import Image
 
 # Read in data for usage
 filename = input("\nPlease enter the name of the sounding you want to plot (format: YYYYMMDD_HHz): ")
@@ -64,7 +57,6 @@ for point in range(0, size):
         locationList[point], popup = _location, tooltip = "Ascending Balloon",
         icon = folium.Icon(color = "blue", icon_color = "white", icon = "glyphicon glyphicon-arrow-up")
         ).add_to(sounding_plot)
-    # Check to see if a previous 400mb point has been plotted
     if check400mb == False:
         # Sounding successful to 400mb, within a typical altitude range of this pressure height
         if altitudeList[point] > 7200 and altitudeList[point] < 7600:
