@@ -1,6 +1,9 @@
 # 3D Sounding Viewer Patches and Updates
 All versions of 3D Sounding Viewer will be documented here, along with the changelog and bug fixes
 
+## Version 0.7.0-pre (Date Finished - 10/17/2022)
+- Added some more advanced checks to how the points are plotted
+
 ## Version 0.5.0-pre (Date Finished - 10/07/2022)
 - Can plot 2D test data onto an interactive Folium map
 

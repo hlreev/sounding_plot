@@ -1,4 +1,4 @@
-latitude,longitude,geometric_altitude
+latitude,longitude,raw_geometric_altitude
 32.83535,-97.29823,201.6
 32.83579,-97.30144,499.4
 32.83582,-97.30656,1002.0

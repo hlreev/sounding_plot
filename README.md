@@ -1,4 +1,4 @@
-# Welcome to the 3D Sounding Viewer!
+# Welcome to the 2D/3D Sounding Viewer!
 
 ## About
 This is a simple program that takes data from weather balloon launches and displays the data onto a 3D map so you can see the trajectory of the balloon as it moves through the atmosphere.

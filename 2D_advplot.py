@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #  Author: Hunter L Reeves
-#    Date: 10/12/2022
+#    Date: 10/17/2022
 # Purpose: Plots 2D data points of a weather balloon on an advanced map with streeview data
 #  Github: https://github.com/hlreev/sounding_plot_3D
  
@@ -32,7 +32,7 @@ folium.TileLayer('cartodbdark_matter', name = "CartoDB DarkMatter").add_to(sound
 folium.LayerControl().add_to(sounding_plot)
 
 # Release point for the balloon and location of FWD office
-upperair = [32.835088963714874, -97.29794483866789] # coordinates to the upper air bldg
+upperair = [32.83508, -97.29794] # coordinates to the upper air bldg
 _location = "Latitude: " + str(upperair[0]) + ", Longitude: " + str(upperair[1])
 folium.Marker(
     upperair, popup = _location, tooltip = "FWD Upper Air", 
@@ -40,7 +40,7 @@ folium.Marker(
 ).add_to(sounding_plot)
 
 # Obtain and organize the data for the locations of balloon data
-altitudes = data["geometric_altitude"]
+altitudes = data["raw_geometric_altitude"]
 altitudeList = altitudes.values.tolist() # Use for altitudes
 locations = data[['latitude', 'longitude']]
 locationList = locations.values.tolist() # Use for locations
@@ -67,7 +67,7 @@ for point in range(0, size):
     # Check to see if a previous 400mb point has been plotted
     if check400mb == False:
         # Sounding successful to 400mb, within a typical altitude range of this pressure height
-        if altitudeList[point] > 7250 and altitudeList[point] < 7500:
+        if altitudeList[point] > 7200 and altitudeList[point] < 7600:
             folium.Marker(
             locationList[point], popup = _location, tooltip = "Successful to 400mb",
             icon = folium.Icon(color = "green", icon_color = "white", icon = "glyphicon glyphicon-ok")
