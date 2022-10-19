@@ -19,7 +19,7 @@ def processLevel0():
 def processLevel1():
     # Local imports for *.nc files
     import numpy as np
-    import netCDF4
+    import netCDF4 # import Dataset is not working
     # Open the file
     path = "data/level1/"
     ext = ".nc"
