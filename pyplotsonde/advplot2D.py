@@ -1,5 +1,5 @@
 #  Author: Hunter L Reeves
-#    Date: 10/18/2022
+#    Date: 10/19/2022
 # Purpose: Plots 2D data points of a weather balloon on an advanced map with streeview data
 #  Github: https://github.com/hlreev/sounding_plot_3D
 
