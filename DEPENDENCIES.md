@@ -1,0 +1,16 @@
+# Sounding Plot 2D/3D Environment Dependencies
+- Below is a list of dependencies for working with this project.
+- It is recommended that you set up a conda environment.
+
+## Dependencies
+- basemap == 1.3.4
+- basemap-data-hires == 1.3.2
+- folium == 0.24.0
+- matplotlib == 3.6.1
+- netCDF4 == 1.6.1
+- numpy == 1.23.4
+- pandas == 1.5.0
+- pyproj == 3.3.1
+
+## ENV COMMAND
+- "conda create -n sounding_plot matplotlib numpy pandas basemap basemap-data-hires pyproj folium netCDF4 --yes -c conda-forge"

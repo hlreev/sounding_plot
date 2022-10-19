@@ -1,0 +1,10 @@
+campaign: NWS
+campaign_id: FWD
+platform: FWD
+platform_number: 1
+location: Fort Worth, TX
+configs:
+    main: config/main.yaml  # name of this file
+    level0: config/level0_mwx.yml
+    level1: config/level1.yaml
+    level2: config/level2.yaml
