@@ -10,8 +10,9 @@
 - numpy == 1.23.4
 - pandas == 1.5.0
 - pyproj == 3.3.1
+- xarray == 0.20.1
 
 ## Setup Environment for the Project
 - It is recommended that you set up a conda environment.
 - You can use the following command as a template:
-- "conda create -n sounding_plot matplotlib numpy pandas basemap basemap-data-hires pyproj folium netCDF4 --yes -c conda-forge"
+- "conda create -n pkg_1 pkg_2 pkg_n --yes -c conda-forge"
