@@ -9,7 +9,7 @@ import subprocess
 # Takes level 0 data (*.mwx) and processes it into level 1 data (*.nc)
 def processLevel0():
     # The necessary command - for testing, NOT YET USABLE FOR RS41-NG SONDES
-    bashCommand = "sounding_converter.exe -i data/level0/BCO_20200126_224454.mwx -o data/level1/BCO_20200126_224454.nc -c config/main.yaml"
+    bashCommand = "sounding_converter.exe -i data/level0/BCO_20200126_224454.mwx -o data/level1/BCO_20200126_224454.nc -c 'C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\config\\main.yaml'"
     process = subprocess.Popen(bashCommand.split(), stdout = subprocess.PIPE)
     output, error = process.communicate()
     # All is said and done
@@ -19,7 +19,7 @@ def processLevel0():
 def processLevel1():
     # Local imports for *.nc files
     import numpy as np
-    import netCDF4 # import Dataset is not working
+    import netCDF4 as nc
     # Open the file
     path = "data/level1/"
     ext = ".nc"
