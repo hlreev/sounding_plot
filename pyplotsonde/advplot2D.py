@@ -5,6 +5,7 @@
 
 # Global imports
 import folium as fm
+from netCDF4 import Dataset
 
 # Takes in level2 *.csv data and reads it into a pandas dataframe
 def readData():
