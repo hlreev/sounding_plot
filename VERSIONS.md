@@ -3,10 +3,10 @@ All versions of 3D Sounding Viewer will be documented here, along with the chang
 
 ## Version 0.8.0-pre (Date Finished - 10/18/2022)
 - More advanced functionality is beginning work
-- *.mwx data conversion to *.nc and then *.csv
 - Reorganized and cleaned up code
 - Better structure and workflow for running scripts
 - Added file to list usage and dependencies
+- Reworked some functionality and obtained better data to use
 
 ## Version 0.7.0-pre (Date Finished - 10/17/2022)
 - Added some more advanced checks to how the points are plotted
