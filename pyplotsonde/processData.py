@@ -1,12 +1,23 @@
-#  Author: Hunter L Reeves
-#    Date: 10/27/2022
-# Purpose: Takes the raw EDT message files and converts them to readable *.csv files
-#  Github: https://github.com/hlreev/sounding_plot_3D
+'''
+Takes the raw EDT message files and converts them to readable *.csv files
+
+Repo: https://github.com/hlreev/sounding_plot_3D
+
+Version History can be found in VERSIONS.md
+'''
 
 # Global imports
 import os
-import csv
 import pandas as pd
+
+# Metadata
+__author__ = 'Hunter L Reeves'
+__license__ = 'GPL3'
+__version__ = '0.8.0-pre'
+__maintainer__ = 'Hunter L Reeves, NWS Fort Worth'
+__email__ = 'hunter.reeves@noaa.gov'
+__status__ = 'In Production'
+__lastUpdated__ = '2022-10-29'
 
 # Looks through the level0 data for later reading and conversion
 def findLevel0Files():

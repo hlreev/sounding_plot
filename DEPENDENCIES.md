@@ -4,7 +4,6 @@
 ## Dependencies
 - basemap == 1.3.4
 - basemap-data-hires == 1.3.2
-- dataset == 1.5.2
 - folium == 0.24.0
 - matplotlib == 3.6.1
 - metpy == 1.3.1

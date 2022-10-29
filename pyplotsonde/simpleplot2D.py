@@ -1,7 +1,10 @@
-#  Author: Hunter L Reeves
-#    Date: 10/04/2022
-# Purpose: Plots 2D data points of a weather balloon sounding on a simple basemap
-#  Github: https://github.com/hlreev/sounding_plot_3D
+'''
+Plots 2D data points of a weather balloon sounding on a simple basemap
+
+Repo: https://github.com/hlreev/sounding_plot_3D
+
+Version History can be found in VERSIONS.md
+'''
 
 import os
 import matplotlib.pyplot as plt
@@ -10,6 +13,15 @@ import pandas as pd
 from mpl_toolkits.basemap import Basemap
 from pyproj import geodesic_version_str
 os.environ['PROJ_LIB'] = '/Users/hunlr/anaconda3/envs/cartopy_env/Library/share/proj'
+
+# Metadata
+__author__ = 'Hunter L Reeves'
+__license__ = 'GPL3'
+__version__ = '0.8.0-pre'
+__maintainer__ = 'Hunter L Reeves, NWS Fort Worth'
+__email__ = 'hunter.reeves@noaa.gov'
+__status__ = 'In Production'
+__lastUpdated__ = '2022-10-29'
 
 # Read in data for usage
 filename = input("\nPlease enter the name of the sounding you want to plot (format: YYYYMMDD_HHz): ")

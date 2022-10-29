@@ -1,11 +1,22 @@
-#  Author: Hunter L Reeves
-#    Date: 10/19/2022
-# Purpose: Plots 2D data points of a weather balloon on an advanced map with streeview data
-#  Github: https://github.com/hlreev/sounding_plot_3D
+'''
+Plots 2D data points of a weather balloon on an advanced map with streeview data
+
+Repo: https://github.com/hlreev/sounding_plot_3D
+
+Version History can be found in VERSIONS.md
+'''
 
 # Global imports
 import folium as fm
-from netCDF4 import Dataset
+
+# Metadata
+__author__ = 'Hunter L Reeves'
+__license__ = 'GPL3'
+__version__ = '0.8.0-pre'
+__maintainer__ = 'Hunter L Reeves, NWS Fort Worth'
+__email__ = 'hunter.reeves@noaa.gov'
+__status__ = 'In Production'
+__lastUpdated__ = '2022-10-29'
 
 # Takes in level2 *.csv data and reads it into a pandas dataframe
 def readData():
