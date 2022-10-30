@@ -12,7 +12,7 @@ import folium as fm
 # Metadata
 __author__ = 'Hunter L Reeves'
 __license__ = 'GPL3'
-__version__ = '0.8.0-pre'
+__version__ = '0.9.0-pre'
 __maintainer__ = 'Hunter L Reeves, NWS Fort Worth'
 __email__ = 'hunter.reeves@noaa.gov'
 __status__ = 'In Production'
@@ -27,7 +27,7 @@ def readData():
     ext = ".csv"
     filename = input("\nPlease enter the name of the sounding you want to plot (edt_YYYYMMDD_HHMM): ")
     data = pd.read_csv(path + filename + ext)
-    print("Plotting data... this may take a second or two.")
+    print("\nPlotting data... this may take a second or two.")
     # Return: base data
     return data
 
@@ -58,21 +58,18 @@ def parseData(data):
     altitudeList = altitudes.values.tolist() # Use for altitudes
     locations = data[['Lat', 'Lon']]
     locationList = locations.values.tolist() # Use for locations
-    dataPoints = data['n']
-    dataPointList = dataPoints.values.tolist() # Use for data point count
     # Return: parsed data
-    return locationList, altitudeList, dataPointList
+    return locationList, altitudeList
 
 # Takes in the parsed data and base map and then plots the parsed data onto the folium basemap
-def plotData(locationList, altitudeList, dataPointList, sounding_plot):
+def plotData(locationList, altitudeList, sounding_plot):
     # Get the size of the list of locations for index information
     size = len(locationList)
     # Flag to check if 400mb has been reached
     check400mb = False
     # Cycle through the data and add the balloon data points to the folium map
     for point in range(0, size):
-        if point % 100 == 0: # 5 - high, 20 - intermediate, 50 - low, 100 - poor
-            # Clean up the code for accessing the data later on...
+        # Clean up the code for accessing the data later on...
             lats = locationList[point][0] # latitude values from the list
             lons = locationList[point][1] # longitude values from the list
             alts = altitudeList[point] # altitude values
@@ -95,24 +92,23 @@ def plotData(locationList, altitudeList, dataPointList, sounding_plot):
                     # 400mb reached, no longer need to plot successful points
                     check400mb = True
             # Create the trajectory of the weather balloon
-            """ fm.PolyLine(
+            fm.PolyLine(
                 locationList, color = "yellow", weight = "6", tooltip = "Balloon Path"
-                ).add_to(sounding_plot) """
-        # Termination location (It is the 9998th data point)
-        if dataPointList == 9998:
-            print('Termination Point')
-            fm.Marker(
-            locationList[point], popup = _location, tooltip = "Termination",
-            icon = fm.Icon(color = "red", icon_color = "white", icon = "glyphicon glyphicon-remove-circle")
-            ).add_to(sounding_plot)
+                ).add_to(sounding_plot)
+            # Termination location (The last point of the dataset)
+            if point == (size - 1):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Termination",
+                icon = fm.Icon(color = "red", icon_color = "white", icon = "glyphicon glyphicon-remove-circle")
+                ).add_to(sounding_plot)
 
 # Work with the data, and then plot the sounding data onto the basemap
 def main():
     # Function calls for the program to function
     data = readData()
     sounding_plot = createBasemap()
-    locationList, altitudeList, dataPointList = parseData(data)
-    plotData(locationList, altitudeList, dataPointList, sounding_plot)
+    locationList, altitudeList = parseData(data)
+    plotData(locationList, altitudeList, sounding_plot)
     # Display the map in a web browser
     sounding_plot.save("viewer/sounding_plot_2D.html")
 

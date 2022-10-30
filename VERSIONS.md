@@ -1,6 +1,12 @@
 # 3D Sounding Viewer Patches and Updates
 All versions of 3D Sounding Viewer will be documented here, along with the changelog and bug fixes
 
+## Version 0.9.0-pre (Date Finished - 10/30/2022)
+- Reworked some of the files and structure
+- Now can select the temporal resolution of the data that you want to plot
+- Plots special points for mandatory levels
+- Fix the logic for misc point plotting, 400mb, and termination
+
 ## Version 0.8.0-pre (Date Finished - 10/29/2022)
 - More advanced functionality is beginning work
 - Reorganized and cleaned up code
