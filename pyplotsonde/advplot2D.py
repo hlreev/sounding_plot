@@ -23,10 +23,10 @@ def readData():
     # Local imports
     import pandas as pd
     # Read in data for usage
-    path = "data/level2/old/"
+    path = "data/level1/"
     ext = ".csv"
-    filename = input("\nPlease enter the name of the sounding you want to plot (format: YYYYMMDD_HHz): ")
-    data = pd.read_csv(path + filename + ext) # DELETEME - debug/testing
+    filename = input("\nPlease enter the name of the sounding you want to plot (edt_YYYYMMDD_HHMM): ")
+    data = pd.read_csv(path + filename + ext)
     print("Plotting data... this may take a second or two.")
     # Return: base data
     return data
@@ -54,9 +54,9 @@ def createBasemap():
 # Takes in base data and then parses the data in the pandas dataframe for plotting onto the basemap
 def parseData(data):
     # Obtain and organize the data for the locations of balloon data
-    altitudes = data["raw_geometric_altitude"]
+    altitudes = data['GpsHeightMSL']
     altitudeList = altitudes.values.tolist() # Use for altitudes
-    locations = data[['latitude', 'longitude']]
+    locations = data[['Lat', 'Lon']]
     locationList = locations.values.tolist() # Use for locations
     # Return: parsed data
     return locationList, altitudeList
