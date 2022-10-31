@@ -105,7 +105,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 flags['925mb'] = True
         elif flags['850mb'] == False:
             # Sounding made it to 850mb
-            if pressureList[point] == 850.0 or (pressureList[point] > 825 and pressureList[point] < 875):
+            if pressureList[point] == 850.0 or (pressureList[point] > 849 and pressureList[point] < 850):
                 fm.Marker(
                 locationList[point], popup = _location, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon )
@@ -116,7 +116,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 flags['850mb'] = True
         elif flags['700mb'] == False:
             # Sounding made it to 700mb
-            if pressureList[point] == 700.0 or (pressureList[point] > 675 and pressureList[point] < 725):
+            if pressureList[point] == 700.0 or (pressureList[point] > 699 and pressureList[point] < 700):
                 fm.Marker(
                 locationList[point], popup = _location, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
@@ -127,7 +127,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 flags['700mb'] = True
         elif flags['500mb'] == False:
             # Sounding made it to 500mb
-            if pressureList[point] == 500.0 or (pressureList[point] > 475 and pressureList[point] < 525):
+            if pressureList[point] == 500.0 or (pressureList[point] > 499 and pressureList[point] < 500):
                 fm.Marker(
                 locationList[point], popup = _location, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
@@ -138,7 +138,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 flags['500mb'] = True
         elif flags['400mb'] == False:
             # Sounding successful to 400mb, within a typical altitude range of this pressure height
-            if pressureList[point] == 400.0 or (pressureList[point] > 375 and pressureList[point] < 425):
+            if pressureList[point] == 400.0 or (pressureList[point] > 399 and pressureList[point] < 400):
                 fm.Marker(
                 locationList[point], popup = _location, tooltip = "Successful to 400mb",
                 icon = fm.Icon(color = "green", icon_color = _iconcolor, icon = "glyphicon glyphicon-ok")
@@ -149,7 +149,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 flags['400mb'] = True
         elif flags['300mb'] == False:
             # Sounding made it to 300mb
-            if pressureList[point] == 300.0 or (pressureList[point] > 275 and pressureList[point] < 325):
+            if pressureList[point] == 300.0 or (pressureList[point] > 299 and pressureList[point] < 300):
                 fm.Marker(
                 locationList[point], popup = _location, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
@@ -160,7 +160,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 flags['300mb'] = True
         elif flags['250mb'] == False:
             # Sounding made it to 250mb
-            if pressureList[point] == 250.0 or (pressureList[point] > 215 and pressureList[point] < 275):
+            if pressureList[point] == 250.0 or (pressureList[point] > 249 and pressureList[point] < 250):
                 fm.Marker(
                 locationList[point], popup = _location, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
@@ -171,7 +171,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 flags['250mb'] = True
         elif flags['200mb'] == False:
             # Sounding made it to 200mb
-            if pressureList[point] == 200.0 or (pressureList[point] > 175 and pressureList[point] < 225):
+            if pressureList[point] == 200.0 or (pressureList[point] > 199 and pressureList[point] < 200):
                 fm.Marker(
                 locationList[point], popup = _location, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)

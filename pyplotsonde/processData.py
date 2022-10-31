@@ -8,7 +8,6 @@ Version History can be found in VERSIONS.md
 
 # Global imports
 import os
-import string
 
 # Metadata
 __author__ = 'Hunter L Reeves'
