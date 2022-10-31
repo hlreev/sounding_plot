@@ -16,7 +16,7 @@ __version__ = '0.9.0-pre'
 __maintainer__ = 'Hunter L Reeves, NWS Fort Worth'
 __email__ = 'hunter.reeves@noaa.gov'
 __status__ = 'In Production'
-__lastUpdated__ = '2022-10-29'
+__lastUpdated__ = '2022-10-30'
 
 # Takes in level2 *.csv data and reads it into a pandas dataframe
 def readData():
@@ -46,7 +46,7 @@ def createBasemap():
     _location = "Latitude: " + str(upperair[0]) + ", Longitude: " + str(upperair[1])
     fm.Marker(
         upperair, popup = _location, tooltip = "FWD Upper Air", 
-        icon = fm.Icon(color = "darkblue", icon_color = "white", icon = "glyphicon glyphicon-star")
+        icon = fm.Icon(color = "darkblue", icon_color = "white", icon = "glyphicon glyphicon-home")
     ).add_to(sounding_plot)
     # Return: basemap
     return sounding_plot
@@ -58,57 +58,145 @@ def parseData(data):
     altitudeList = altitudes.values.tolist() # Use for altitudes
     locations = data[['Lat', 'Lon']]
     locationList = locations.values.tolist() # Use for locations
+    pressures = data['P']
+    pressureList = pressures.values.tolist() # Use for pressure heights
     # Return: parsed data
-    return locationList, altitudeList
+    return locationList, altitudeList, pressureList
 
 # Takes in the parsed data and base map and then plots the parsed data onto the folium basemap
-def plotData(locationList, altitudeList, sounding_plot):
+def plotData(locationList, altitudeList, pressureList, sounding_plot):
     # Get the size of the list of locations for index information
     size = len(locationList)
-    # Flag to check if 400mb has been reached
+    # Flags to check if pressure level has been reached
+    check925mb = False
+    check850mb = False
+    check700mb = False
+    check500mb = False
     check400mb = False
+    check300mb = False
+    check250mb = False
+    check200mb = False
+    # Mandatory settings
+    _color = 'blue'
+    _iconcolor = 'white'
+    _icon = 'glyphicon glyphicon-star'
     # Cycle through the data and add the balloon data points to the folium map
     for point in range(0, size):
-        # Clean up the code for accessing the data later on...
-            lats = locationList[point][0] # latitude values from the list
-            lons = locationList[point][1] # longitude values from the list
-            alts = altitudeList[point] # altitude values
-            # Information for each new data point in the plot
-            _location = ("Lat. (°N): " + str(lats) + 
-                        ", Lon. (°E): " + str(lons) + 
-                        ", Alt. (m): " + str(alts))
-            # Plot the ascending balloon data points
-            fm.Marker(
-                locationList[point], popup = _location, tooltip = "Ascending Balloon",
-                icon = fm.Icon(color = "blue", icon_color = "white", icon = "glyphicon glyphicon-arrow-up")
-                ).add_to(sounding_plot)
-            if check400mb == False:
-                # Sounding successful to 400mb, within a typical altitude range of this pressure height
-                if altitudeList[point] > 7200 and altitudeList[point] < 7600:
-                    fm.Marker(
-                    locationList[point], popup = _location, tooltip = "Successful to 400mb",
-                    icon = fm.Icon(color = "green", icon_color = "white", icon = "glyphicon glyphicon-ok")
-                    ).add_to(sounding_plot)
-                    # 400mb reached, no longer need to plot successful points
-                    check400mb = True
-            # Create the trajectory of the weather balloon
-            fm.PolyLine(
-                locationList, color = "yellow", weight = "6", tooltip = "Balloon Path"
-                ).add_to(sounding_plot)
-            # Termination location (The last point of the dataset)
-            if point == (size - 1):
+    # Clean up the code for accessing the data later on...
+        lats = locationList[point][0] # latitude values from the list
+        lons = locationList[point][1] # longitude values from the list
+        pres = pressureList[point] # pressure values
+        alts = altitudeList[point] # altitude values
+        # Information for each new data point in the plot
+        _location = (str(lats) + '°N, ' + str(lons) + '°W, ' + str(pres) + 'mb, ' + str(alts) + 'm')
+        # Plot the ascending balloon data points
+        if check925mb == False:
+            # Sounding made it to 925mb
+            if pressureList[point] == 925.0 or (pressureList[point] > 905 and pressureList[point] < 945):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Termination",
-                icon = fm.Icon(color = "red", icon_color = "white", icon = "glyphicon glyphicon-remove-circle")
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon )
                 ).add_to(sounding_plot)
-
+                # Debug message
+                print('925mb reached')
+                # 925mb reached, no longer need to plot this point
+                check925mb = True
+        elif check850mb == False:
+            # Sounding made it to 850mb
+            if pressureList[point] == 850.0 or (pressureList[point] > 825 and pressureList[point] < 875):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon )
+                ).add_to(sounding_plot)
+                # Debug message
+                print('850mb reached')
+                # 850mb reached, no longer need to plot this point
+                check850mb = True
+        elif check700mb == False:
+            # Sounding made it to 700mb
+            if pressureList[point] == 700.0 or (pressureList[point] > 675 and pressureList[point] < 725):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
+                ).add_to(sounding_plot)
+                # Debug message
+                print('700mb reached')
+                # 700mb reached, no longer need to plot this point
+                check700mb = True
+        elif check500mb == False:
+            # Sounding made it to 500mb
+            if pressureList[point] == 500.0 or (pressureList[point] > 475 and pressureList[point] < 525):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
+                ).add_to(sounding_plot)
+                # Debug message
+                print('500mb reached')
+                # 500mb reached, no longer need to plot this point
+                check500mb = True
+        elif check400mb == False:
+            # Sounding successful to 400mb, within a typical altitude range of this pressure height
+            if pressureList[point] == 400.0 or (pressureList[point] > 375 and pressureList[point] < 425):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Successful to 400mb",
+                icon = fm.Icon(color = "green", icon_color = _iconcolor, icon = "glyphicon glyphicon-ok")
+                ).add_to(sounding_plot)
+                # Debug message
+                print('400mb reached')
+                # 400mb reached, no longer need to plot successful points
+                check400mb = True
+        elif check300mb == False:
+            # Sounding made it to 300mb
+            if pressureList[point] == 300.0 or (pressureList[point] > 275 and pressureList[point] < 325):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
+                ).add_to(sounding_plot)
+                # Debug message
+                print('300mb reached')
+                # 300mb reached, no longer need to plot this point
+                check300mb = True
+        elif check250mb == False:
+            # Sounding made it to 250mb
+            if pressureList[point] == 250.0 or (pressureList[point] > 215 and pressureList[point] < 275):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
+                ).add_to(sounding_plot)
+                # Debug message
+                print('250mb reached')
+                # 250mb reached, no longer need to plot this point
+                check250mb = True
+        elif check200mb == False:
+            # Sounding made it to 200mb
+            if pressureList[point] == 200.0 or (pressureList[point] > 175 and pressureList[point] < 225):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
+                ).add_to(sounding_plot)
+                # Debug message
+                print('200mb reached')
+                # 200mb reached, no longer need to plot this point
+                check200mb = True
+        elif point == (size - 1):
+            # Termination location (The last point of the dataset)
+            fm.Marker(
+            locationList[point], popup = _location, tooltip = "Termination",
+            icon = fm.Icon(color = "red", icon_color = _iconcolor, icon = "glyphicon glyphicon-remove-circle")
+            ).add_to(sounding_plot)
+            print('Termination.')
+    # Create the trajectory of the weather balloon
+    fm.PolyLine(
+        locationList, color = "grey", weight = "4", tooltip = "Balloon Path"
+        ).add_to(sounding_plot)
+            
 # Work with the data, and then plot the sounding data onto the basemap
 def main():
     # Function calls for the program to function
     data = readData()
     sounding_plot = createBasemap()
-    locationList, altitudeList = parseData(data)
-    plotData(locationList, altitudeList, sounding_plot)
+    locationList, altitudeList, pressureList = parseData(data)
+    plotData(locationList, altitudeList, pressureList, sounding_plot)
     # Display the map in a web browser
     sounding_plot.save("viewer/sounding_plot_2D.html")
 
