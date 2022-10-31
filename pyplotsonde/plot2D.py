@@ -68,14 +68,16 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
     # Get the size of the list of locations for index information
     size = len(locationList)
     # Flags to check if pressure level has been reached
-    check925mb = False
-    check850mb = False
-    check700mb = False
-    check500mb = False
-    check400mb = False
-    check300mb = False
-    check250mb = False
-    check200mb = False
+    flags = {
+        '925mb': False,
+        '850mb': False,
+        '700mb': False,
+        '500mb': False,
+        '400mb': False,
+        '300mb': False,
+        '250mb': False,
+        '200mb': False
+    }
     # Mandatory settings
     _color = 'blue'
     _iconcolor = 'white'
@@ -90,9 +92,9 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
         # Information for each new data point in the plot
         _location = (str(lats) + '°N, ' + str(lons) + '°W, ' + str(pres) + 'mb, ' + str(alts) + 'm')
         # Plot the ascending balloon data points
-        if check925mb == False:
+        if flags['925mb'] == False:
             # Sounding made it to 925mb
-            if pressureList[point] == 925.0 or (pressureList[point] > 905 and pressureList[point] < 945):
+            if pressureList[point] == 925.0 or (pressureList[point] > 924 and pressureList[point] < 925):
                 fm.Marker(
                 locationList[point], popup = _location, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon )
@@ -100,8 +102,8 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 # Debug message
                 print('925mb reached')
                 # 925mb reached, no longer need to plot this point
-                check925mb = True
-        elif check850mb == False:
+                flags['925mb'] = True
+        elif flags['850mb'] == False:
             # Sounding made it to 850mb
             if pressureList[point] == 850.0 or (pressureList[point] > 825 and pressureList[point] < 875):
                 fm.Marker(
@@ -111,8 +113,8 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 # Debug message
                 print('850mb reached')
                 # 850mb reached, no longer need to plot this point
-                check850mb = True
-        elif check700mb == False:
+                flags['850mb'] = True
+        elif flags['700mb'] == False:
             # Sounding made it to 700mb
             if pressureList[point] == 700.0 or (pressureList[point] > 675 and pressureList[point] < 725):
                 fm.Marker(
@@ -122,8 +124,8 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 # Debug message
                 print('700mb reached')
                 # 700mb reached, no longer need to plot this point
-                check700mb = True
-        elif check500mb == False:
+                flags['700mb'] = True
+        elif flags['500mb'] == False:
             # Sounding made it to 500mb
             if pressureList[point] == 500.0 or (pressureList[point] > 475 and pressureList[point] < 525):
                 fm.Marker(
@@ -133,8 +135,8 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 # Debug message
                 print('500mb reached')
                 # 500mb reached, no longer need to plot this point
-                check500mb = True
-        elif check400mb == False:
+                flags['500mb'] = True
+        elif flags['400mb'] == False:
             # Sounding successful to 400mb, within a typical altitude range of this pressure height
             if pressureList[point] == 400.0 or (pressureList[point] > 375 and pressureList[point] < 425):
                 fm.Marker(
@@ -144,8 +146,8 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 # Debug message
                 print('400mb reached')
                 # 400mb reached, no longer need to plot successful points
-                check400mb = True
-        elif check300mb == False:
+                flags['400mb'] = True
+        elif flags['300mb'] == False:
             # Sounding made it to 300mb
             if pressureList[point] == 300.0 or (pressureList[point] > 275 and pressureList[point] < 325):
                 fm.Marker(
@@ -155,8 +157,8 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 # Debug message
                 print('300mb reached')
                 # 300mb reached, no longer need to plot this point
-                check300mb = True
-        elif check250mb == False:
+                flags['300mb'] = True
+        elif flags['250mb'] == False:
             # Sounding made it to 250mb
             if pressureList[point] == 250.0 or (pressureList[point] > 215 and pressureList[point] < 275):
                 fm.Marker(
@@ -166,8 +168,8 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 # Debug message
                 print('250mb reached')
                 # 250mb reached, no longer need to plot this point
-                check250mb = True
-        elif check200mb == False:
+                flags['250mb'] = True
+        elif flags['200mb'] == False:
             # Sounding made it to 200mb
             if pressureList[point] == 200.0 or (pressureList[point] > 175 and pressureList[point] < 225):
                 fm.Marker(
@@ -177,7 +179,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 # Debug message
                 print('200mb reached')
                 # 200mb reached, no longer need to plot this point
-                check200mb = True
+                flags['200mb'] = True
         elif point == (size - 1):
             # Termination location (The last point of the dataset)
             fm.Marker(
