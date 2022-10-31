@@ -76,7 +76,14 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
         '400mb': False,
         '300mb': False,
         '250mb': False,
-        '200mb': False
+        '200mb': False,
+        '150mb': False,
+        '100mb': False,
+        '70mb': False,
+        '50mb': False,
+        '30mb': False,
+        '20mb': False,
+        '10mb': False,
     }
     # Mandatory settings
     _color = 'blue'
@@ -180,6 +187,83 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
                 print('200mb reached')
                 # 200mb reached, no longer need to plot this point
                 flags['200mb'] = True
+        elif flags['150mb'] == False:
+            # Sounding made it to 150mb
+            if pressureList[point] == 150.0 or (pressureList[point] > 149 and pressureList[point] < 150):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
+                ).add_to(sounding_plot)
+                # Debug message
+                print('150mb reached')
+                # 150mb reached, no longer need to plot this point
+                flags['150mb'] = True
+        elif flags['100mb'] == False:
+            # Sounding made it to 100mb
+            if pressureList[point] == 100.0 or (pressureList[point] > 99 and pressureList[point] < 100):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
+                ).add_to(sounding_plot)
+                # Debug message
+                print('100mb reached')
+                # 100mb reached, no longer need to plot this point
+                flags['100mb'] = True
+        elif flags['70mb'] == False:
+            # Sounding made it to 70mb
+            if pressureList[point] == 70.0 or (pressureList[point] > 69 and pressureList[point] < 70):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Messages Sent!",
+                icon = fm.Icon(color = 'cadetblue', icon_color = _iconcolor, icon = "glyphicon glyphicon-envelope")
+                ).add_to(sounding_plot)
+                # Debug message
+                print('70mb reached')
+                # 70mb reached, no longer need to plot this point
+                flags['70mb'] = True
+        elif flags['50mb'] == False:
+            # Sounding made it to 50mb
+            if pressureList[point] == 50.0 or (pressureList[point] > 49 and pressureList[point] < 50):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
+                ).add_to(sounding_plot)
+                # Debug message
+                print('50mb reached')
+                # 50mb reached, no longer need to plot this point
+                flags['50mb'] = True
+        elif flags['30mb'] == False:
+            # Sounding made it to 30mb
+            if pressureList[point] == 30.0 or (pressureList[point] > 29 and pressureList[point] < 30):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
+                ).add_to(sounding_plot)
+                # Debug message
+                print('30mb reached')
+                # 30mb reached, no longer need to plot this point
+                flags['30mb'] = True
+        elif flags['20mb'] == False:
+            # Sounding made it to 20mb
+            if pressureList[point] == 20.0 or (pressureList[point] > 19 and pressureList[point] < 20):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
+                ).add_to(sounding_plot)
+                # Debug message
+                print('20mb reached')
+                # 20mb reached, no longer need to plot this point
+                flags['20mb'] = True
+        elif flags['10mb'] == False:
+            # Sounding made it to 10mb
+            if pressureList[point] == 10.0 or (pressureList[point] > 9 and pressureList[point] < 10):
+                fm.Marker(
+                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
+                ).add_to(sounding_plot)
+                # Debug message
+                print('10mb reached')
+                # 10mb reached, no longer need to plot this point
+                flags['10mb'] = True
         elif point == (size - 1):
             # Termination location (The last point of the dataset)
             fm.Marker(
