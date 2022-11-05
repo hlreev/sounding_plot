@@ -29,7 +29,7 @@ def readData():
     data = pd.read_csv(path + filename + ext)
     print("\nPlotting data... this may take a second or two.")
     # Return: base data
-    return data
+    return data, filename
 
 # Creates a basemap with folium and some starting points for the FWD office and upper-air building
 def createBasemap():
@@ -279,12 +279,12 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
 # Work with the data, and then plot the sounding data onto the basemap
 def main():
     # Function calls for the program to function
-    data = readData()
+    data, filename = readData()
     sounding_plot = createBasemap()
     locationList, altitudeList, pressureList = parseData(data)
     plotData(locationList, altitudeList, pressureList, sounding_plot)
     # Display the map in a web browser
-    sounding_plot.save("viewer/sounding_plot_2D.html")
+    sounding_plot.save("viewer/" + filename + ".html")
 
 # Run the program
 main()
