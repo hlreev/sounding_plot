@@ -12,11 +12,11 @@ import folium as fm
 # Metadata
 __author__ = 'Hunter L Reeves'
 __license__ = 'GPL3'
-__version__ = '0.9.1-pre'
+__version__ = '0.9.2-pre'
 __maintainer__ = 'Hunter L Reeves, NWS Fort Worth'
 __email__ = 'hunter.reeves@noaa.gov'
 __status__ = 'In Production'
-__lastUpdated__ = '2022-10-30'
+__lastUpdated__ = '2022-11-05'
 
 # Takes in level2 *.csv data and reads it into a pandas dataframe
 def readData():
