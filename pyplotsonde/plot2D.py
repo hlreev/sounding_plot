@@ -60,11 +60,13 @@ def parseData(data):
     locationList = locations.values.tolist() # Use for locations
     pressures = data['P']
     pressureList = pressures.values.tolist() # Use for pressure heights
+    points = data['n'] 
+    pointsList = points.values.tolist() # Use for data point count
     # Return: parsed data
-    return locationList, altitudeList, pressureList
+    return locationList, altitudeList, pressureList, pointsList
 
 # Takes in the parsed data and base map and then plots the parsed data onto the folium basemap
-def plotData(locationList, altitudeList, pressureList, sounding_plot):
+def plotData(locationList, altitudeList, pressureList, pointsList, sounding_plot):
     # Get the size of the list of locations for index information
     size = len(locationList)
     # Flags to check if pressure level has been reached
@@ -96,14 +98,15 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
         lons = locationList[point][1] # longitude values from the list
         pres = pressureList[point] # pressure values
         alts = altitudeList[point] # altitude values
+        points = pointsList[point] # point values
         # Information for each new data point in the plot
-        _location = (str(lats) + '°N, ' + str(lons) + '°W, ' + str(pres) + 'mb, ' + str(alts) + 'm')
+        info = (str(lats) + '°N, ' + str(lons) + '°W, ' + str(pres) + 'mb, ' + str(alts) + 'm')
         # Plot the ascending balloon data points
         if flags['925mb'] == False:
             # Sounding made it to 925mb
             if pressureList[point] == 925.0 or (pressureList[point] > 924 and pressureList[point] < 925):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon )
                 ).add_to(sounding_plot)
                 # Debug message
@@ -114,7 +117,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 850mb
             if pressureList[point] == 850.0 or (pressureList[point] > 849 and pressureList[point] < 850):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon )
                 ).add_to(sounding_plot)
                 # Debug message
@@ -125,7 +128,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 700mb
             if pressureList[point] == 700.0 or (pressureList[point] > 699 and pressureList[point] < 700):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
                 ).add_to(sounding_plot)
                 # Debug message
@@ -136,7 +139,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 500mb
             if pressureList[point] == 500.0 or (pressureList[point] > 499 and pressureList[point] < 500):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
                 ).add_to(sounding_plot)
                 # Debug message
@@ -147,7 +150,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding successful to 400mb, within a typical altitude range of this pressure height
             if pressureList[point] == 400.0 or (pressureList[point] > 399 and pressureList[point] < 400):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Successful to 400mb",
+                locationList[point], popup = info, tooltip = "Successful to 400mb",
                 icon = fm.Icon(color = "green", icon_color = _iconcolor, icon = "glyphicon glyphicon-ok")
                 ).add_to(sounding_plot)
                 # Debug message
@@ -158,7 +161,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 300mb
             if pressureList[point] == 300.0 or (pressureList[point] > 299 and pressureList[point] < 300):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
                 ).add_to(sounding_plot)
                 # Debug message
@@ -169,7 +172,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 250mb
             if pressureList[point] == 250.0 or (pressureList[point] > 249 and pressureList[point] < 250):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
                 ).add_to(sounding_plot)
                 # Debug message
@@ -180,7 +183,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 200mb
             if pressureList[point] == 200.0 or (pressureList[point] > 199 and pressureList[point] < 200):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
                 ).add_to(sounding_plot)
                 # Debug message
@@ -191,7 +194,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 150mb
             if pressureList[point] == 150.0 or (pressureList[point] > 149 and pressureList[point] < 150):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
                 ).add_to(sounding_plot)
                 # Debug message
@@ -202,7 +205,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 100mb
             if pressureList[point] == 100.0 or (pressureList[point] > 99 and pressureList[point] < 100):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
                 ).add_to(sounding_plot)
                 # Debug message
@@ -213,7 +216,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 70mb
             if pressureList[point] == 70.0 or (pressureList[point] > 69 and pressureList[point] < 70):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Messages Sent!",
+                locationList[point], popup = info, tooltip = "Messages Sent!",
                 icon = fm.Icon(color = 'cadetblue', icon_color = _iconcolor, icon = "glyphicon glyphicon-envelope")
                 ).add_to(sounding_plot)
                 # Debug message
@@ -224,7 +227,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 50mb
             if pressureList[point] == 50.0 or (pressureList[point] > 49 and pressureList[point] < 50):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
                 ).add_to(sounding_plot)
                 # Debug message
@@ -235,7 +238,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 30mb
             if pressureList[point] == 30.0 or (pressureList[point] > 29 and pressureList[point] < 30):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
                 ).add_to(sounding_plot)
                 # Debug message
@@ -246,7 +249,7 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 20mb
             if pressureList[point] == 20.0 or (pressureList[point] > 19 and pressureList[point] < 20):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
                 ).add_to(sounding_plot)
                 # Debug message
@@ -257,17 +260,17 @@ def plotData(locationList, altitudeList, pressureList, sounding_plot):
             # Sounding made it to 10mb
             if pressureList[point] == 10.0 or (pressureList[point] > 9 and pressureList[point] < 10):
                 fm.Marker(
-                locationList[point], popup = _location, tooltip = "Mandatory Level",
+                locationList[point], popup = info, tooltip = "Mandatory Level",
                 icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
                 ).add_to(sounding_plot)
                 # Debug message
                 print('10mb reached')
                 # 10mb reached, no longer need to plot this point
                 flags['10mb'] = True
-        elif point == (size - 1):
+        elif points == 9998 or (point == (size - 1)):
             # Termination location (The last point of the dataset)
             fm.Marker(
-            locationList[point], popup = _location, tooltip = "Termination",
+            locationList[point], popup = info, tooltip = "Termination",
             icon = fm.Icon(color = "red", icon_color = _iconcolor, icon = "glyphicon glyphicon-remove-circle")
             ).add_to(sounding_plot)
             print('Termination.')
@@ -281,8 +284,8 @@ def main():
     # Function calls for the program to function
     data, filename = readData()
     sounding_plot = createBasemap()
-    locationList, altitudeList, pressureList = parseData(data)
-    plotData(locationList, altitudeList, pressureList, sounding_plot)
+    locationList, altitudeList, pressureList, pointsList = parseData(data)
+    plotData(locationList, altitudeList, pressureList, pointsList, sounding_plot)
     # Display the map in a web browser
     sounding_plot.save("viewer/" + filename + ".html")
 

@@ -3,6 +3,7 @@ All versions of 3D Sounding Viewer will be documented here, along with the chang
 
 ## Version 0.9.2-pre (Date Finished - 11/05/2022)
 - Minor change to how the *.html files are named and saved for viewing data
+- Minor tweak to what data is available and some of the logic for plotting
 
 ## Version 0.9.1-pre (Date Finished - 10/30/2022)
 - Minor tweaks and clean ups to code
