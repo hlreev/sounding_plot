@@ -12,11 +12,11 @@ import folium as fm
 # Metadata
 __author__ = 'Hunter L Reeves'
 __license__ = 'GPL3'
-__version__ = '0.9.2-pre'
+__version__ = '0.9.3-pre'
 __maintainer__ = 'Hunter L Reeves, NWS Fort Worth'
 __email__ = 'hunter.reeves@noaa.gov'
 __status__ = 'In Production'
-__lastUpdated__ = '2022-11-05'
+__lastUpdated__ = '2022-11-08'
 
 # Takes in level2 *.csv data and reads it into a pandas dataframe
 def readData():
@@ -35,7 +35,7 @@ def readData():
 def createBasemap():
     # Create the base map
     fwd = [32.8350, -97.2986] # coordinates to the fort worth wfo
-    sounding_plot = fm.Map(location = fwd,  zoom_start = 18, control_scale = True, tiles = False)
+    sounding_plot = fm.Map(location = fwd,  zoom_start = 10, control_scale = True, tiles = False)
     # Add some additional map layers
     fm.TileLayer('openstreetmap', name = "OpenStreetMap").add_to(sounding_plot)
     fm.TileLayer('cartodbpositron', name = "CartoDB Positron").add_to(sounding_plot)

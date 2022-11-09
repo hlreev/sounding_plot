@@ -1,6 +1,11 @@
 # 3D Sounding Viewer Patches and Updates
 All versions of 3D Sounding Viewer will be documented here, along with the changelog and bug fixes
 
+## Version 0.9.3-pre (Date Finished - 11/08/2022)
+- Change to initial zoom of map to data
+- Removed the now deprecated "resolution" option for processing data, all data is now in 'full'
+- Added some additional console messages to processData as well
+
 ## Version 0.9.2-pre (Date Finished - 11/05/2022)
 - Minor change to how the *.html files are named and saved for viewing data
 - Minor tweak to what data is available and some of the logic for plotting
