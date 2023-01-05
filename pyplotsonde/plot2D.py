@@ -27,7 +27,7 @@ flags = { '925mb': False, '850mb': False, '700mb': False, '500mb': False, '400mb
           '300mb': False, '250mb': False, '200mb': False, '150mb': False, '100mb': False,
            '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False, }
 
-# Plots all of the mandatory points on the sounding
+# Plots the first valid point for each mandatory level on the sounding
 def plotMandatoryPoint(index, pressureList, locationList, info, points, size, sounding_plot):
     # Plot the ascending balloon data points
     if flags['925mb'] == False:
