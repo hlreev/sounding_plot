@@ -24,7 +24,8 @@ _iconcolor = 'white'
 # Styles for the Backup Offices
 _polyColor = {'fillColor': '#00ddff', 'color': '#adaaaa'}
 # For file management
-_path = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level1\\"
+_csvPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level1\\"
+_jsonPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\"
 _ext = ".csv"
 
 
@@ -210,11 +211,11 @@ def createBasemap():
     fwd = [32.8350, -97.2986] # coordinates to the fort worth wfo
     sounding_plot = fm.Map(location = fwd,  zoom_start = 8, control_scale = True, tiles = None)
     # Adds the county polygons for the FWD CWA from a geojson file
-    fm.GeoJson('C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\FWD.geojson', name = 'Fort Worth CWA', show = True).add_to(sounding_plot)
+    fm.GeoJson(_jsonPath + 'FWD.geojson', name = 'Fort Worth CWA').add_to(sounding_plot)
     # Add the backup office polygon CWAs from geojson files
-    fm.GeoJson('C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\SHV.geojson', name = 'Shreveport CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
-    fm.GeoJson('C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\OUN.geojson', name = 'Norman CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
-    fm.GeoJson('C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\OHX.geojson', name = 'Nashville CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
+    fm.GeoJson(_jsonPath + 'SHV.geojson', name = 'Shreveport CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
+    fm.GeoJson(_jsonPath + 'OUN.geojson', name = 'Norman CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
+    fm.GeoJson(_jsonPath + 'OHX.geojson', name = 'Nashville CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
     # Add some additional map layers
     fm.TileLayer('openstreetmap', name = "OpenStreetMap").add_to(sounding_plot)
     fm.TileLayer('cartodbpositron', name = "CartoDB Positron").add_to(sounding_plot)
@@ -235,7 +236,7 @@ def readData(currentFile):
     # Local imports
     import pandas as pd
     # Data for reading files in the level1 directory
-    fileName = _path + currentFile
+    fileName = _csvPath + currentFile
     # Open the csv file and return the data for plotting
     data = pd.read_csv(fileName)
     # Return: base data
@@ -247,7 +248,7 @@ def findFiles():
     files = []
     count = 0
     # Iterate over all the files in the directory, store into list
-    for file in os.listdir(_path):
+    for file in os.listdir(_csvPath):
         if file.endswith(_ext):
             # Add the file and increment the counter
             files.append(file)
@@ -267,7 +268,7 @@ def main():
     # Obtain the count of the number of files in the level1 directory
     files = findFiles()
     # For console debugging
-    print('\nPath: ' + _path + ' | Files found: ' + str(len(files)) + '\n')
+    print('\nPath: ' + _csvPath + ' | Files found: ' + str(len(files)) + '\n')
     # Go through each *.csv file and plot the data on a new html page
     for currentFile in files:
         # Function calls for the program to function
