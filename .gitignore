@@ -2,14 +2,9 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 
 # Data files
-data/
+level0/
+level1/
 viewer/
-
-# ignores all .md files
-.md
-
-# does not ignore the README.md file
-!README.md
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
