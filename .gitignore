@@ -2,9 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 
 # Data files
-#/level0
-#/level1
-#/level2
+data/
+viewer/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
