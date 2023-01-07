@@ -8,29 +8,30 @@ Version History can be found in VERSIONS.md
 
 # Global imports
 import folium as fm
+import os
 
 # Metadata
 __author__ = 'Hunter L Reeves'
 __license__ = 'GPL3'
-__version__ = '0.9.4-pre'
 __maintainer__ = 'Hunter L Reeves, NWS Fort Worth'
 __email__ = 'hunter.reeves@noaa.gov'
 __status__ = 'In Production'
-__lastUpdated__ = '2023-01-05'
 
 # Global Settings for plotted points
 _color = 'blue'
 _icon = 'glyphicon glyphicon-star'
 _iconcolor = 'white'
-# Flags to check if pressure level has been reached
-flags = { '925mb': False, '850mb': False, '700mb': False, '500mb': False, '400mb': False, 
-          '300mb': False, '250mb': False, '200mb': False, '150mb': False, '100mb': False,
-           '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False, }
+# Styles for the Backup Offices
+_polyColor = {'fillColor': '#00ddff', 'color': '#adaaaa'}
+# For file management
+_path = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level1\\"
+_ext = ".csv"
+
 
 # Plots the first valid point for each mandatory level on the sounding
-def plotMandatoryPoint(index, pressureList, locationList, info, points, size, sounding_plot):
+def plotMandatoryPoint(index, pressureList, locationList, info, points, size, sounding_plot, _flags):
     # Plot the ascending balloon data points
-    if flags['925mb'] == False:
+    if _flags['925mb'] == False:
         # Sounding made it to 925mb
         if pressureList[index] == 925.0 or (pressureList[index] > 924 and pressureList[index] < 925):
             fm.Marker(
@@ -38,8 +39,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon )
             ).add_to(sounding_plot)
             # 925mb reached, no longer need to plot this index
-            flags['925mb'] = True
-    elif flags['850mb'] == False:
+            _flags['925mb'] = True
+    elif _flags['850mb'] == False:
         # Sounding made it to 850mb
         if pressureList[index] == 850.0 or (pressureList[index] > 849 and pressureList[index] < 850):
             fm.Marker(
@@ -47,8 +48,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon )
             ).add_to(sounding_plot)
             # 850mb reached, no longer need to plot this index
-            flags['850mb'] = True
-    elif flags['700mb'] == False:
+            _flags['850mb'] = True
+    elif _flags['700mb'] == False:
         # Sounding made it to 700mb
         if pressureList[index] == 700.0 or (pressureList[index] > 699 and pressureList[index] < 700):
             fm.Marker(
@@ -56,8 +57,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             # 700mb reached, no longer need to plot this index
-            flags['700mb'] = True
-    elif flags['500mb'] == False:
+            _flags['700mb'] = True
+    elif _flags['500mb'] == False:
         # Sounding made it to 500mb
         if pressureList[index] == 500.0 or (pressureList[index] > 499 and pressureList[index] < 500):
             fm.Marker(
@@ -65,8 +66,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             # 500mb reached, no longer need to plot this index
-            flags['500mb'] = True
-    elif flags['400mb'] == False:
+            _flags['500mb'] = True
+    elif _flags['400mb'] == False:
         # Sounding successful to 400mb, within a typical altitude range of this pressure height
         if pressureList[index] == 400.0 or (pressureList[index] > 399 and pressureList[index] < 400):
             fm.Marker(
@@ -74,8 +75,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = "green", icon_color = _iconcolor, icon = "glyphicon glyphicon-ok")
             ).add_to(sounding_plot)
             # 400mb reached, no longer need to plot successful indexs
-            flags['400mb'] = True
-    elif flags['300mb'] == False:
+            _flags['400mb'] = True
+    elif _flags['300mb'] == False:
         # Sounding made it to 300mb
         if pressureList[index] == 300.0 or (pressureList[index] > 299 and pressureList[index] < 300):
             fm.Marker(
@@ -83,8 +84,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             # 300mb reached, no longer need to plot this index
-            flags['300mb'] = True
-    elif flags['250mb'] == False:
+            _flags['300mb'] = True
+    elif _flags['250mb'] == False:
         # Sounding made it to 250mb
         if pressureList[index] == 250.0 or (pressureList[index] > 249 and pressureList[index] < 250):
             fm.Marker(
@@ -92,8 +93,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             # 250mb reached, no longer need to plot this index
-            flags['250mb'] = True
-    elif flags['200mb'] == False:
+            _flags['250mb'] = True
+    elif _flags['200mb'] == False:
         # Sounding made it to 200mb
         if pressureList[index] == 200.0 or (pressureList[index] > 199 and pressureList[index] < 200):
             fm.Marker(
@@ -101,8 +102,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             # 200mb reached, no longer need to plot this index
-            flags['200mb'] = True
-    elif flags['150mb'] == False:
+            _flags['200mb'] = True
+    elif _flags['150mb'] == False:
         # Sounding made it to 150mb
         if pressureList[index] == 150.0 or (pressureList[index] > 149 and pressureList[index] < 150):
             fm.Marker(
@@ -110,8 +111,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             # 150mb reached, no longer need to plot this index
-            flags['150mb'] = True
-    elif flags['100mb'] == False:
+            _flags['150mb'] = True
+    elif _flags['100mb'] == False:
         # Sounding made it to 100mb
         if pressureList[index] == 100.0 or (pressureList[index] > 99 and pressureList[index] < 100):
             fm.Marker(
@@ -119,8 +120,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             # 100mb reached, no longer need to plot this index
-            flags['100mb'] = True
-    elif flags['70mb'] == False:
+            _flags['100mb'] = True
+    elif _flags['70mb'] == False:
         # Sounding made it to 70mb
         if pressureList[index] == 70.0 or (pressureList[index] > 69 and pressureList[index] < 70):
             fm.Marker(
@@ -128,8 +129,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = 'cadetblue', icon_color = _iconcolor, icon = "glyphicon glyphicon-envelope")
             ).add_to(sounding_plot)
             # 70mb reached, no longer need to plot this index
-            flags['70mb'] = True
-    elif flags['50mb'] == False:
+            _flags['70mb'] = True
+    elif _flags['50mb'] == False:
         # Sounding made it to 50mb
         if pressureList[index] == 50.0 or (pressureList[index] > 49 and pressureList[index] < 50):
             fm.Marker(
@@ -137,8 +138,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             # 50mb reached, no longer need to plot this index
-            flags['50mb'] = True
-    elif flags['30mb'] == False:
+            _flags['50mb'] = True
+    elif _flags['30mb'] == False:
         # Sounding made it to 30mb
         if pressureList[index] == 30.0 or (pressureList[index] > 29 and pressureList[index] < 30):
             fm.Marker(
@@ -146,8 +147,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             # 30mb reached, no longer need to plot this index
-            flags['30mb'] = True
-    elif flags['20mb'] == False:
+            _flags['30mb'] = True
+    elif _flags['20mb'] == False:
         # Sounding made it to 20mb
         if pressureList[index] == 20.0 or (pressureList[index] > 19 and pressureList[index] < 20):
             fm.Marker(
@@ -155,8 +156,8 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             # 20mb reached, no longer need to plot this index
-            flags['20mb'] = True
-    elif flags['10mb'] == False:
+            _flags['20mb'] = True
+    elif _flags['10mb'] == False:
         # Sounding made it to 10mb
         if pressureList[index] == 10.0 or (pressureList[index] > 9 and pressureList[index] < 10):
             fm.Marker(
@@ -164,7 +165,7 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             # 10mb reached, no longer need to plot this index
-            flags['10mb'] = True
+            _flags['10mb'] = True
     elif points == 9998 or (index == (size - 1)):
         # Termination location (The last point of the dataset)
         fm.Marker(
@@ -173,7 +174,7 @@ def plotMandatoryPoint(index, pressureList, locationList, info, points, size, so
         ).add_to(sounding_plot)
 
 # Takes in the parsed data and base map and then plots the parsed data onto the folium basemap
-def plotData(locationList, altitudeList, pressureList, pointsList, sounding_plot):
+def plotData(locationList, altitudeList, pressureList, pointsList, sounding_plot, _flags):
     # Get the size of the list of locations for index information
     size = len(locationList)
     # Cycle through the data and add the balloon data points to the folium map
@@ -183,7 +184,7 @@ def plotData(locationList, altitudeList, pressureList, pointsList, sounding_plot
         # Information for each new data point in the plot
         info = (str(locationList[index][0]) + '°N, ' + str(locationList[index][1]) + '°W, ' + str(pressureList[index]) + 'mb, ' + str(altitudeList[index]) + 'm')
         # Plot mandatory points on the sounding
-        plotMandatoryPoint(index, pressureList, locationList, info, points, size, sounding_plot)
+        plotMandatoryPoint(index, pressureList, locationList, info, points, size, sounding_plot, _flags)
     # Create the trajectory of the weather balloon
     fm.PolyLine(
         locationList, color = "grey", weight = "4", tooltip = "Balloon Path"
@@ -207,14 +208,20 @@ def parseData(data):
 def createBasemap():
     # Create the base map
     fwd = [32.8350, -97.2986] # coordinates to the fort worth wfo
-    sounding_plot = fm.Map(location = fwd,  zoom_start = 10, control_scale = True, tiles = False)
+    sounding_plot = fm.Map(location = fwd,  zoom_start = 8, control_scale = True, tiles = None)
+    # Adds the county polygons for the FWD CWA from a geojson file
+    fm.GeoJson('C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\FWD.geojson', name = 'Fort Worth CWA', show = True).add_to(sounding_plot)
+    # Add the backup office polygon CWAs from geojson files
+    fm.GeoJson('C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\SHV.geojson', name = 'Shreveport CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
+    fm.GeoJson('C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\OUN.geojson', name = 'Norman CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
+    fm.GeoJson('C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\OHX.geojson', name = 'Nashville CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
     # Add some additional map layers
     fm.TileLayer('openstreetmap', name = "OpenStreetMap").add_to(sounding_plot)
     fm.TileLayer('cartodbpositron', name = "CartoDB Positron").add_to(sounding_plot)
     fm.TileLayer('cartodbdark_matter', name = "CartoDB DarkMatter").add_to(sounding_plot)
     fm.LayerControl().add_to(sounding_plot)
-    # Release point for the balloon and location of FWD office
-    upperair = [32.83508, -97.29794] # coordinates to the upper air bldg
+    # Adds the release point for the balloon and location of FWD office (upper air building)
+    upperair = [32.83508, -97.29794]
     _location = "Latitude: " + str(upperair[0]) + ", Longitude: " + str(upperair[1])
     fm.Marker(
         upperair, popup = _location, tooltip = "FWD Upper Air", 
@@ -223,30 +230,64 @@ def createBasemap():
     # Return: basemap
     return sounding_plot
 
-# Takes in level2 *.csv data and reads it into a pandas dataframe
-def readData():
+# Takes in level1 *.csv data and reads it into a pandas dataframe
+def readData(currentFile):
     # Local imports
     import pandas as pd
-    # Read in data for usage
-    path = "data/level1/"
-    ext = ".csv"
-    filename = input("\nPlease enter the date and time of the sounding you want to plot (YYYYMMDD_HHMM): ")
-    data = pd.read_csv(path + 'edt_' + filename + ext)
+    # Data for reading files in the level1 directory
+    fileName = _path + currentFile
+    # Open the csv file and return the data for plotting
+    data = pd.read_csv(fileName)
     # Return: base data
-    return data
+    return data, currentFile
+
+# Looks through the level1 files to obtain the filename and the count
+def findFiles():
+    # List of files that need to be read in with the count for the files
+    files = []
+    count = 0
+    # Iterate over all the files in the directory, store into list
+    for file in os.listdir(_path):
+        if file.endswith(_ext):
+            # Add the file and increment the counter
+            files.append(file)
+            count += 1
+        else:
+            print('\nError: ' + file + ' is not in the correct format!')
+            continue
+    # Return: read files that need to be processed
+    return files
             
 # Work with the data, and then plot the sounding data onto the basemap
 def main():
-    # Function calls for the program to function
-    data = readData()
-    sounding_plot = createBasemap()
-    locationList, altitudeList, pressureList, pointsList = parseData(data)
-    # Plot the data
-    plotData(locationList, altitudeList, pressureList, pointsList, sounding_plot)
+    # Flags to check if pressure level has been reached
+    _flags = { '925mb': False, '850mb': False, '700mb': False, '500mb': False, '400mb': False, 
+               '300mb': False, '250mb': False, '200mb': False, '150mb': False, '100mb': False,
+                '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False }
+    # Obtain the count of the number of files in the level1 directory
+    files = findFiles()
+    # For console debugging
+    print('\nPath: ' + _path + ' | Files found: ' + str(len(files)) + '\n')
+    # Go through each *.csv file and plot the data on a new html page
+    for currentFile in files:
+        # Function calls for the program to function
+        data, file = readData(currentFile)
+        sounding_plot = createBasemap()
+        locationList, altitudeList, pressureList, pointsList = parseData(data)
+        # Plot the data
+        plotData(locationList, altitudeList, pressureList, pointsList, sounding_plot, _flags)
+        # Clean up the name and then save the html file in the directory
+        removeFront = file.replace('edt_', '')
+        cleanedName = removeFront.replace('.csv', '')
+        sounding_plot.save("viewer/" + cleanedName + ".html")
+        # Message to console
+        print(currentFile + " has been plotted and saved.")
+        # Reset flags to plot the mandatory levels for the next plot
+        _flags = { '925mb': False, '850mb': False, '700mb': False, '500mb': False, '400mb': False, 
+                   '300mb': False, '250mb': False, '200mb': False, '150mb': False, '100mb': False,
+                    '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False }
     # Print the message for debugging at the end of the program running
-    print("\nSounding has been plotted. It can be viewed in the browser from '/viewer/sounding_plot.html'.")
-    # Display the map in a web browser
-    sounding_plot.save("viewer/sounding_plot.html")
+    print("\nThe soundings have been plotted. It can be viewed in the browser from the '/viewer/' directory.")
 
 # Run the program
 main()
