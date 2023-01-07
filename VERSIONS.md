@@ -1,5 +1,11 @@
-# 3D Sounding Viewer Patches and Updates
-All versions of 3D Sounding Viewer will be documented here, along with the changelog and bug fixes
+# Sounding Plot Viewer Patches and Updates
+All versions of Sounding Plot Viewer will be documented here, along with the changelog and bug fixes
+
+## Version 0.9.7-pre (Date Finished - 01/07/2023)
+- Cleaned up the code a bit and made it somewhat easier to read
+- Added a compass rose to the bottom left of the screen
+- Removed CartoDB Dark Matter in favor of the Stamen series basemaps
+- Minor changes and tweaks
 
 ## Version 0.9.6-pre (Date Finished - 01/06/2023)
 - Cleaned up the code a bit and made it somewhat easier to read

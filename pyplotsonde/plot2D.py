@@ -9,6 +9,7 @@ Version History can be found in VERSIONS.md
 # Global imports
 import folium as fm
 import os
+from folium.plugins import FloatImage
 
 # Metadata
 __author__ = 'Hunter L Reeves'
@@ -26,6 +27,8 @@ _polyColor = {'fillColor': '#00ddff', 'color': '#adaaaa'}
 # For file management
 _csvPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level1\\"
 _jsonPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\"
+# Static Images for plotting
+_compassRose = ("https://raw.githubusercontent.com/ocefpaf/secoora_assets_map/a250729bbcf2ddd12f46912d36c33f7539131bec/secoora_icons/rose.png")
 
 # Plots the first valid point for each mandatory level on the sounding
 def plotMandatoryPoints(index, pressureList, locationList, info, points, size, sounding_plot, _flags):
@@ -186,8 +189,7 @@ def plotData(locationList, altitudeList, pressureList, pointsList, sounding_plot
         plotMandatoryPoints(index, pressureList, locationList, info, points, size, sounding_plot, _flags)
     # Create the trajectory of the weather balloon
     fm.PolyLine(
-        locationList, color = "grey", weight = "4", tooltip = "Balloon Path"
-        ).add_to(sounding_plot)
+        locationList, color = "grey", weight = "4").add_to(sounding_plot)
 
 # Takes in base data and then parses the data in the pandas dataframe for plotting onto the basemap
 def parseData(data):
@@ -217,7 +219,11 @@ def createBasemap():
     # Add some additional map layers
     fm.TileLayer('openstreetmap', name = "OpenStreetMap").add_to(sounding_plot)
     fm.TileLayer('cartodbpositron', name = "CartoDB Positron").add_to(sounding_plot)
-    fm.TileLayer('cartodbdark_matter', name = "CartoDB DarkMatter").add_to(sounding_plot)
+    fm.TileLayer('stamentoner', name = "Stamen Toner").add_to(sounding_plot)
+    fm.TileLayer('stamenwatercolor', name = "Stamen Watercolor").add_to(sounding_plot)
+    # Test
+    FloatImage(_compassRose, bottom = 2, left = 89).add_to(sounding_plot)
+    # Add the tile layer control
     fm.LayerControl().add_to(sounding_plot)
     # Adds the release point for the balloon and location of FWD office (upper air building)
     upperair = [32.83508, -97.29794]
