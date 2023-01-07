@@ -57,7 +57,7 @@ def processLevel0Files(fout, fp):
             fout.write('\n')
 
 # Process the raw data from the EDT messages to comma delimited *.txt files
-def openLevel0Files(txtFiles):
+def openFiles(txtFiles):
     # Process txt files to csv files
     for index in range(0, len(txtFiles)):
         # Open the file stream to write the processed level0 data
@@ -72,7 +72,7 @@ def openLevel0Files(txtFiles):
     convertToCSV(txtFiles)
 
 # Looks through the level0 data for later reading and conversion
-def findLevel0Files():
+def findFiles():
     # List of files that need to be read in
     txtFiles = []
     # Iterate over all the files in the directory, store into list
@@ -88,11 +88,11 @@ def findLevel0Files():
 # Process the data
 def main():
     # Obtain all level0 files in the directory
-    txtFiles = findLevel0Files()
+    txtFiles = findFiles()
     # For console debugging
     print('\nPath: ' + level0_path + ' | Files found: ' + str(len(txtFiles)) + '\n')
     # Open all of the level 0 files
-    openLevel0Files(txtFiles)
+    openFiles(txtFiles)
     # Message when finished
     print('\nDone. Your data is now ready to plot. It can be found in /data/level1.')
 

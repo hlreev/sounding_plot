@@ -26,11 +26,9 @@ _polyColor = {'fillColor': '#00ddff', 'color': '#adaaaa'}
 # For file management
 _csvPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level1\\"
 _jsonPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\"
-_ext = ".csv"
-
 
 # Plots the first valid point for each mandatory level on the sounding
-def plotMandatoryPoint(index, pressureList, locationList, info, points, size, sounding_plot, _flags):
+def plotMandatoryPoints(index, pressureList, locationList, info, points, size, sounding_plot, _flags):
     # Plot the ascending balloon data points
     if _flags['925mb'] == False:
         # Sounding made it to 925mb
@@ -185,7 +183,7 @@ def plotData(locationList, altitudeList, pressureList, pointsList, sounding_plot
         # Information for each new data point in the plot
         info = (str(locationList[index][0]) + '°N, ' + str(locationList[index][1]) + '°W, ' + str(pressureList[index]) + 'mb, ' + str(altitudeList[index]) + 'm')
         # Plot mandatory points on the sounding
-        plotMandatoryPoint(index, pressureList, locationList, info, points, size, sounding_plot, _flags)
+        plotMandatoryPoints(index, pressureList, locationList, info, points, size, sounding_plot, _flags)
     # Create the trajectory of the weather balloon
     fm.PolyLine(
         locationList, color = "grey", weight = "4", tooltip = "Balloon Path"
@@ -242,33 +240,8 @@ def readData(currentFile):
     # Return: base data
     return data, currentFile
 
-# Looks through the level1 files to obtain the filename and the count
-def findFiles():
-    # List of files that need to be read in with the count for the files
-    files = []
-    count = 0
-    # Iterate over all the files in the directory, store into list
-    for file in os.listdir(_csvPath):
-        if file.endswith(_ext):
-            # Add the file and increment the counter
-            files.append(file)
-            count += 1
-        else:
-            print('\nError: ' + file + ' is not in the correct format!')
-            continue
-    # Return: read files that need to be processed
-    return files
-            
-# Work with the data, and then plot the sounding data onto the basemap
-def main():
-    # Flags to check if pressure level has been reached
-    _flags = { '925mb': False, '850mb': False, '700mb': False, '500mb': False, '400mb': False, 
-               '300mb': False, '250mb': False, '200mb': False, '150mb': False, '100mb': False,
-                '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False }
-    # Obtain the count of the number of files in the level1 directory
-    files = findFiles()
-    # For console debugging
-    print('\nPath: ' + _csvPath + ' | Files found: ' + str(len(files)) + '\n')
+# Generate each sounding plot
+def generatePlots(_flags, files):
     # Go through each *.csv file and plot the data on a new html page
     for currentFile in files:
         # Function calls for the program to function
@@ -287,6 +260,30 @@ def main():
         _flags = { '925mb': False, '850mb': False, '700mb': False, '500mb': False, '400mb': False, 
                    '300mb': False, '250mb': False, '200mb': False, '150mb': False, '100mb': False,
                     '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False }
+
+# Looks through the level1 files to obtain the filename and the count
+def findFiles():
+    # List of files that need to be read in
+    filenames = []
+    # Iterate over all the files in the directory, store into list
+    for name in os.listdir(_csvPath):
+        # Add the file and increment the counter
+        filenames.append(name)
+    # Return: read files that need to be processed and the size of the files read in
+    return filenames
+            
+# Bulk of code is ran here
+def main():
+    # Flags to check if pressure level has been reached
+    _flags = { '925mb': False, '850mb': False, '700mb': False, '500mb': False, '400mb': False, 
+               '300mb': False, '250mb': False, '200mb': False, '150mb': False, '100mb': False,
+                '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False }
+    # Obtain the file names for use later when saving the plots
+    files = findFiles()
+    # Message for the console
+    print('\nPath: ' + _csvPath + ' | Files found: ' + str(len(files)) + '\n')
+    # Generate each soudning plot - bulk of the code is executed here
+    generatePlots(_flags, files)
     # Print the message for debugging at the end of the program running
     print("\nThe soundings have been plotted. It can be viewed in the browser from the '/viewer/' directory.")
 
