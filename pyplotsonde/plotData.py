@@ -7,8 +7,10 @@ Version History can be found in VERSIONS.md
 '''
 
 # Global imports
-import folium as fm
 import os
+import numpy as np
+import pandas as pd
+import folium as fm
 from folium.plugins import FloatImage
 
 # Metadata
@@ -184,7 +186,7 @@ def plotData(locationList, altitudeList, pressureList, pointsList, sounding_plot
         # Points for keeping track of termination
         points = pointsList[index]
         # Information for each new data point in the plot
-        info = (str(locationList[index][0]) + '°N, ' + str(locationList[index][1]) + '°W, ' + str(pressureList[index]) + 'mb, ' + str(altitudeList[index]) + 'm')
+        info = (str(pressureList[index]) + 'mb')
         # Plot mandatory points on the sounding
         plotMandatoryPoints(index, pressureList, locationList, info, points, size, sounding_plot, _flags)
     # Create the trajectory of the weather balloon
@@ -193,7 +195,7 @@ def plotData(locationList, altitudeList, pressureList, pointsList, sounding_plot
 
 # Takes in base data and then parses the data in the pandas dataframe for plotting onto the basemap
 def parseData(data):
-    # Obtain and organize the data for the locations of balloon data
+    # Obtain and organize the data for the locations of balloon data 
     altitudes = data['GpsHeightMSL']
     altitudeList = altitudes.values.tolist() # Use for altitudes
     locations = data[['Lat', 'Lon']]
@@ -228,17 +230,12 @@ def createBasemap():
     # Adds the release point for the balloon and location of FWD office (upper air building)
     upperair = [32.83508, -97.29794]
     _location = "Latitude: " + str(upperair[0]) + ", Longitude: " + str(upperair[1])
-    fm.Marker(
-        upperair, popup = _location, tooltip = "FWD Upper Air", 
-        icon = fm.Icon(color = "darkblue", icon_color = "white", icon = "glyphicon glyphicon-home")
-    ).add_to(sounding_plot)
+    fm.Marker(upperair, popup = _location, tooltip = "FWD Upper Air", icon = fm.Icon(color = "darkblue", icon_color = "white", icon = "glyphicon glyphicon-home")).add_to(sounding_plot)
     # Return: basemap
     return sounding_plot
 
 # Takes in level1 *.csv data and reads it into a pandas dataframe
 def readData(currentFile):
-    # Local imports
-    import pandas as pd
     # Data for reading files in the level1 directory
     fileName = _csvPath + currentFile
     # Open the csv file and return the data for plotting
@@ -247,7 +244,7 @@ def readData(currentFile):
     return data, currentFile
 
 # Generate each sounding plot
-def generatePlots(_flags, files):
+def generatePlots(files, _flags):
     # Go through each *.csv file and plot the data on a new html page
     for currentFile in files:
         # Function calls for the program to function
@@ -263,9 +260,7 @@ def generatePlots(_flags, files):
         # Message to console
         print(currentFile + " has been plotted and saved.")
         # Reset flags to plot the mandatory levels for the next plot
-        _flags = { '925mb': False, '850mb': False, '700mb': False, '500mb': False, '400mb': False, 
-                   '300mb': False, '250mb': False, '200mb': False, '150mb': False, '100mb': False,
-                    '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False }
+        _flags = {flag: False for flag in _flags}
 
 # Looks through the level1 files to obtain the filename and the count
 def findFiles():
@@ -289,7 +284,7 @@ def main():
     # Message for the console
     print('\nPath: ' + _csvPath + ' | Files found: ' + str(len(files)) + '\n')
     # Generate each soudning plot - bulk of the code is executed here
-    generatePlots(_flags, files)
+    generatePlots(files, _flags)
     # Print the message for debugging at the end of the program running
     print("\nThe soundings have been plotted. It can be viewed in the browser from the '/viewer/' directory.")
 

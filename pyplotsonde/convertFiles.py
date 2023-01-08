@@ -39,7 +39,7 @@ def convertToCSV(txtFiles):
         csvFiles = new_file
         # Increment counter to keep track of how many files have been processed
         count += 1
-        print(str(count) + '/' + str(size) + ' files processed.')
+        print(str(count) + '/' + str(size) + ' files converted.')
     return csvFiles
 
 # Read all the lines in each raw *.txt file and filter the data
@@ -48,10 +48,11 @@ def processLevel0Files(fout, fp):
     lines = fp.readlines()
     # Go through the level0 data
     for row in lines:
-        # Remove the row that has the units (unnecessary)
-        if row != lines[1]:
-            # Remove the word 'time' from the columns
+        # Remove the space between 'Elapsed' and 'time' from the columns
+        if row == lines[0]:
             row = row.replace('Elapsed time', 'ElapsedTime')
+        # Skip the row that has the units (unnecessary) and skip rows with missing data
+        if row != lines[1] and '/' not in row:
             # Repace the spaces with commas for *.csv reading
             fout.write(','.join(row.split()))
             fout.write('\n')
@@ -66,8 +67,6 @@ def openFiles(txtFiles):
         with open(level0_path + txtFiles[index], 'r') as fp:
             # Process each of the files
             processLevel0Files(fout, fp)
-        # Close the file stream
-        fout.close()
     # Convert file extensions to *.csv
     convertToCSV(txtFiles)
 
@@ -92,9 +91,10 @@ def main():
     # For console debugging
     print('\nPath: ' + level0_path + ' | Files found: ' + str(len(txtFiles)) + '\n')
     # Open all of the level 0 files
+    print('Converting *.txt files to *.csv files. This may take a second or two.\n')
     openFiles(txtFiles)
     # Message when finished
-    print('\nDone. Your data is now ready to plot. It can be found in /data/level1.')
+    print('\nDone. Your data is ready to plot. It can be found in /data/level1.')
 
 # Run the program
 main()

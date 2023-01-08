@@ -3,7 +3,7 @@ All versions of Sounding Plot Viewer will be documented here, along with the cha
 
 ## Version 0.9.7-pre (Date Finished - 01/07/2023)
 - Cleaned up the code a bit and made it somewhat easier to read
-- Added a compass rose to the bottom left of the screen
+- Added a compass rose to the bottom right of the screen
 - Removed CartoDB Dark Matter in favor of the Stamen series basemaps
 - Minor changes and tweaks
 
