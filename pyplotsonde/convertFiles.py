@@ -56,6 +56,8 @@ def processLevel0Files(fout, fp):
             # Repace the spaces with commas for *.csv reading
             fout.write(','.join(row.split()))
             fout.write('\n')
+    # Close the file stream
+    fout.close()
 
 # Process the raw data from the EDT messages to comma delimited *.txt files
 def openFiles(txtFiles):

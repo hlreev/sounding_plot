@@ -1,6 +1,13 @@
 # Sounding Plot Viewer Patches and Updates
 All versions of Sounding Plot Viewer will be documented here, along with the changelog and bug fixes
 
+## Version 0.9.8-pre (Date Finished - 01/08/2023)
+- Cleaned up the code a bit and made it somewhat easier to read
+- Can now check for missing data
+- Message print to console about where the missing data is
+- Adjusted some of the data ranges for plotting the mandatory levels
+- Minor changes and tweaks
+
 ## Version 0.9.7-pre (Date Finished - 01/07/2023)
 - Cleaned up the code a bit and made it somewhat easier to read
 - Added a compass rose to the bottom right of the screen
