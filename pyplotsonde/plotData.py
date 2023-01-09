@@ -210,7 +210,7 @@ def parseData(data):
 def createBasemap():
     # Create the base map
     fwd = [32.8350, -97.2986] # coordinates to the fort worth wfo
-    sounding_plot = fm.Map(location = fwd,  zoom_start = 17, control_scale = True, tiles = None)
+    sounding_plot = fm.Map(location = fwd,  zoom_start = 15, control_scale = True, tiles = None)
     # Adds the county polygons for the FWD CWA from a geojson file
     fm.GeoJson(_jsonPath + 'FWD.geojson', name = 'Fort Worth CWA').add_to(sounding_plot)
     # Add the backup office polygon CWAs from geojson files
