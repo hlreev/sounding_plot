@@ -41,6 +41,8 @@ def openIntoBrowser(files, numberOfFiles, numberDisplayedFiles, cleanedName):
         # Limit the number of files opened in the browser (to not overload hardware...)
         if numberOfFiles <= numberDisplayedFiles:
             webbrowser.open('file:///C:/Users/hunlr/Desktop/sounding_plot_3D/viewer/' + cleanedName + '.html')
+    # Return - the updated numberOfFiles
+    return numberOfFiles
 
 # Check for sections of missing data points (if difference is greater than 1, there is missing data!)
 def checkMissingData(currentPoint, previousPoint):
@@ -271,7 +273,7 @@ def generatePlots(files, _flags):
         # Save each sounding plot
         sounding_plot.save('viewer/' + cleanedName + '.html')
         # Open each sounding plot in a new tab in the browser (automatically shows up to 5 in the browser)
-        openIntoBrowser(files, numberOfFiles, numberDisplayedFiles, cleanedName)
+        numberOfFiles = openIntoBrowser(files, numberOfFiles, numberDisplayedFiles, cleanedName)
         # Message to console
         print(currentFile + " has been saved.")
         # Reset flags to plot the mandatory levels for the next plot
