@@ -9,6 +9,7 @@ Version History can be found in VERSIONS.md
 # Global imports
 import os
 import pandas as pd
+import webbrowser
 import folium as fm
 from folium.plugins import FloatImage
 
@@ -243,6 +244,9 @@ def readData(currentFile):
 
 # Generate each sounding plot
 def generatePlots(files, _flags):
+    # Count the files as they are open and the number of files to be displayed
+    counter = 0
+    numberDisplayedFiles = 5
     # Go through each *.csv file and plot the data on a new html page
     for currentFile in files:
         # Function calls for the program to function
@@ -254,7 +258,13 @@ def generatePlots(files, _flags):
         # Clean up the name and then save the html file in the directory
         removeFront = file.replace('edt_', '')
         cleanedName = removeFront.replace('.csv', '')
-        sounding_plot.save("viewer/" + cleanedName + ".html")
+        # Save each sounding plot
+        sounding_plot.save('viewer/' + cleanedName + '.html')
+        # Open each sounding plot in a new tab in the browser (automatically shows up to 5 in the browser)
+        if len(files) != 0:
+            counter += 1
+            if counter <= numberDisplayedFiles:
+                webbrowser.open('file:///C:/Users/hunlr/Desktop/sounding_plot_3D/viewer/' + cleanedName + '.html')
         # Message to console
         print(currentFile + " has been saved.")
         # Reset flags to plot the mandatory levels for the next plot
@@ -283,8 +293,13 @@ def main():
     print('\nPath: ' + _csvPath + ' | Files found: ' + str(len(files)) + '\n')
     # Generate each soudning plot - bulk of the code is executed here
     generatePlots(files, _flags)
-    # Print the message for debugging at the end of the program running
-    print("\nThe soundings have been plotted. It can be viewed in the browser from the '/viewer/' directory.")
+    # Check if there are files in the level1 directory
+    if len(files) != 0:
+        # Print the message for debugging at the end of the program running
+        print("\nThe soundings have been plotted. It can be viewed in the browser from the '/viewer/' directory.")
+    else:
+        # No files found!
+        print('WARNING: No files were found in the /level1/ directory.')
 
 # Run the program
 main()

@@ -6,6 +6,7 @@ All versions of Sounding Plot Viewer will be documented here, along with the cha
 - Can now check for missing data
 - Message print to console about where the missing data is
 - Adjusted some of the data ranges for plotting the mandatory levels
+- Checks the amount of files being plotted and plots a set number of them automatically in the browser
 - Minor changes and tweaks
 
 ## Version 0.9.7-pre (Date Finished - 01/07/2023)
