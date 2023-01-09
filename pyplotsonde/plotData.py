@@ -32,6 +32,16 @@ _jsonPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\"
 # Static Images for plotting
 _compassRose = ("https://raw.githubusercontent.com/ocefpaf/secoora_assets_map/a250729bbcf2ddd12f46912d36c33f7539131bec/secoora_icons/rose.png")
 
+# Opens each sounding plot into a tab in the browser
+def openIntoBrowser(files, numberOfFiles, numberDisplayedFiles, cleanedName):
+    # Checks if there are files
+    if len(files) != 0:
+        # Counter for the number of files
+        numberOfFiles += 1
+        # Limit the number of files opened in the browser (to not overload hardware...)
+        if numberOfFiles <= numberDisplayedFiles:
+            webbrowser.open('file:///C:/Users/hunlr/Desktop/sounding_plot_3D/viewer/' + cleanedName + '.html')
+
 # Check for sections of missing data points (if difference is greater than 1, there is missing data!)
 def checkMissingData(currentPoint, previousPoint):
     # Return - the absolute difference between the two point indexes in question
@@ -245,7 +255,7 @@ def readData(currentFile):
 # Generate each sounding plot
 def generatePlots(files, _flags):
     # Count the files as they are open and the number of files to be displayed
-    counter = 0
+    numberOfFiles = 0
     numberDisplayedFiles = 5
     # Go through each *.csv file and plot the data on a new html page
     for currentFile in files:
@@ -261,10 +271,7 @@ def generatePlots(files, _flags):
         # Save each sounding plot
         sounding_plot.save('viewer/' + cleanedName + '.html')
         # Open each sounding plot in a new tab in the browser (automatically shows up to 5 in the browser)
-        if len(files) != 0:
-            counter += 1
-            if counter <= numberDisplayedFiles:
-                webbrowser.open('file:///C:/Users/hunlr/Desktop/sounding_plot_3D/viewer/' + cleanedName + '.html')
+        openIntoBrowser(files, numberOfFiles, numberDisplayedFiles, cleanedName)
         # Message to console
         print(currentFile + " has been saved.")
         # Reset flags to plot the mandatory levels for the next plot
