@@ -35,7 +35,7 @@ def convertToCSV(txtFiles):
     # Check for when there are no files to convert in the level 0 directory
     if txtSize == 0:
         # Return - flag for checking if there were files or not
-        return 'Null'
+        return None
     # Convert files to *.csv
     for filename in csvFiles:
         infilename = os.path.join(folder, filename)
@@ -48,7 +48,7 @@ def convertToCSV(txtFiles):
         count += 1
         print(str(count) + '/' + str(txtSize) + ' files converted.')
     # Return - the flag for found files
-    return 'True'
+    return True
 
 # Read all the lines in each raw *.txt file and filter the data
 def processLevel0Files(fout, fp):
@@ -83,7 +83,7 @@ def openFiles(txtFiles):
         flag = convertToCSV(txtFiles)
     # Files have already been processed, no need to process them again!
     else:
-        flag = 'False'
+        flag = False
     # Return - the flag that checks if there are files or not
     return flag
 
@@ -112,13 +112,13 @@ def main():
     print('Converting *.txt files to *.csv files. This may take a second or two.\n')
     # Open files, check if there are files to convert
     flag = openFiles(txtFiles)
-    if flag == 'True':
+    if flag == True:
         # Message when finished
         print('\nDone. Your data is ready to plot. It can be found in /data/level1.')
-    elif flag == 'False':
+    elif flag == False:
         # Message when files have already been converted
         print('WARNING: The files have already been converted!')
-    elif flag == 'Null':
+    elif flag == None:
         # Message when there are no files to convert
         print('ERROR: No files were found in the /level0/ directory.')
     else:
