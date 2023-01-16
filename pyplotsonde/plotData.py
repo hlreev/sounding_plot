@@ -29,7 +29,7 @@ _polyColor = {'fillColor': '#00ddff', 'color': '#adaaaa'}
 _csvPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level1\\"
 _jsonPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\"
 # Static Images for plotting
-_compassRose = ("https://raw.githubusercontent.com/ocefpaf/secoora_assets_map/a250729bbcf2ddd12f46912d36c33f7539131bec/secoora_icons/rose.png")
+_compassRose = ("C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\images\\rose.png")
 
 # Check for sections of missing data points (if difference is greater than 1, there is missing data!)
 def checkMissingData(currentPoint, previousPoint):
