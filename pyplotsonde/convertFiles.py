@@ -30,17 +30,24 @@ def convertToCSV(txtFiles):
     size = len(txtFiles)
     # Folder that holds files to change
     folder = 'C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level1\\'
+    # Check for when there are no files to convert
+    if size == 0:
+        print('ERROR: No files were found in the /level0/ directory.')
+        # Return - flag for checking if there were files or not
+        return False
+    # Convert files to *.csv
     for filename in os.listdir(folder):
         infilename = os.path.join(folder, filename)
         if not os.path.isfile(infilename): continue
         # Change the extension to *.csv
         csv_ext = infilename.replace('.txt', '.csv')
-        new_file = os.rename(infilename, csv_ext)
-        csvFiles = new_file
+        # Change the name of the file
+        os.rename(infilename, csv_ext)
         # Increment counter to keep track of how many files have been processed
         count += 1
         print(str(count) + '/' + str(size) + ' files converted.')
-    return csvFiles
+    # Return - the flag for found files
+    return True
 
 # Read all the lines in each raw *.txt file and filter the data
 def processLevel0Files(fout, fp):
@@ -70,7 +77,9 @@ def openFiles(txtFiles):
             # Process each of the files
             processLevel0Files(fout, fp)
     # Convert file extensions to *.csv
-    convertToCSV(txtFiles)
+    flag = convertToCSV(txtFiles)
+    # Return - the flag that checks if there are files or not
+    return flag
 
 # Looks through the level0 data for later reading and conversion
 def findFiles():
@@ -94,9 +103,14 @@ def main():
     print('\nPath: ' + level0_path + ' | Files found: ' + str(len(txtFiles)) + '\n')
     # Open all of the level 0 files
     print('Converting *.txt files to *.csv files. This may take a second or two.\n')
-    openFiles(txtFiles)
-    # Message when finished
-    print('\nDone. Your data is ready to plot. It can be found in /data/level1.')
+    # Open files, check if there are files to convert
+    flag = openFiles(txtFiles)
+    if flag == True:
+        # Message when finished
+        print('\nDone. Your data is ready to plot. It can be found in /data/level1.')
+    else:
+        # No files to convert!
+        return
 
 # Run the program
 main()
