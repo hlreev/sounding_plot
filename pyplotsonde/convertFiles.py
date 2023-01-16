@@ -1,7 +1,7 @@
 '''
 Takes the raw EDT message files and converts them to readable *.csv files
 
-Repo: https://github.com/hlreev/sounding_plot_3D
+Repo: https://github.com/hlreev/sounding_plot
 
 Version History can be found in VERSIONS.md
 '''

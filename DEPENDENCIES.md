@@ -1,4 +1,4 @@
-# Sounding Plot 2D/3D Environment Dependencies
+# Sounding Plot Viewer Environment Dependencies
 - Below is a list of dependencies for working with this project.
 
 ## Dependencies

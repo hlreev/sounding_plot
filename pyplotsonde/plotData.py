@@ -1,7 +1,7 @@
 '''
 Plots 2D data points of a weather balloon on an advanced map with streeview data
 
-Repo: https://github.com/hlreev/sounding_plot_3D
+Repo: https://github.com/hlreev/sounding_plot
 
 Version History can be found in VERSIONS.md
 '''
@@ -26,10 +26,10 @@ _iconcolor = 'white'
 # Styles for the Backup Offices
 _polyColor = {'fillColor': '#00ddff', 'color': '#adaaaa'}
 # For file management
-_csvPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level1\\"
-_jsonPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\"
+_csvPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot\\data\\level1\\"
+_jsonPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot\\data\\geojson\\"
 # Static Images for plotting
-_compassRose = ("C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\images\\rose.png")
+_compassRose = ("C:\\Users\\hunlr\\Desktop\\sounding_plot\\images\\rose.png")
 
 # Check for sections of missing data points (if difference is greater than 1, there is missing data!)
 def checkMissingData(currentPoint, previousPoint):
