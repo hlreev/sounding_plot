@@ -8,6 +8,7 @@ All versions of Sounding Plot Viewer will be documented here, along with the cha
 - Adjusted some of the data ranges for plotting the mandatory levels
 - Added a check to prevent plotting of sondes that did not make it to 400mb (unsuccessful releases)
 - Changes to the config files
+- Added more checks to prevent duplicate files from being generated in the level 1 directory
 - Minor changes and tweaks
 
 ## Version 0.9.7-pre (Date Finished - 01/07/2023)

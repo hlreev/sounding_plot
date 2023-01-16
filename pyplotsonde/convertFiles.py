@@ -27,16 +27,17 @@ level1_ext = '.txt'
 def convertToCSV(txtFiles):
     # Counter and size for processed files
     count = 0
-    size = len(txtFiles)
+    txtSize = len(txtFiles)
     # Folder that holds files to change
     folder = 'C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level1\\'
-    # Check for when there are no files to convert
-    if size == 0:
-        print('ERROR: No files were found in the /level0/ directory.')
+    # Directory holding all of the *.csv files
+    csvFiles = os.listdir(folder)
+    # Check for when there are no files to convert in the level 0 directory
+    if txtSize == 0:
         # Return - flag for checking if there were files or not
-        return False
+        return 'Null'
     # Convert files to *.csv
-    for filename in os.listdir(folder):
+    for filename in csvFiles:
         infilename = os.path.join(folder, filename)
         if not os.path.isfile(infilename): continue
         # Change the extension to *.csv
@@ -45,9 +46,9 @@ def convertToCSV(txtFiles):
         os.rename(infilename, csv_ext)
         # Increment counter to keep track of how many files have been processed
         count += 1
-        print(str(count) + '/' + str(size) + ' files converted.')
+        print(str(count) + '/' + str(txtSize) + ' files converted.')
     # Return - the flag for found files
-    return True
+    return 'True'
 
 # Read all the lines in each raw *.txt file and filter the data
 def processLevel0Files(fout, fp):
@@ -68,16 +69,21 @@ def processLevel0Files(fout, fp):
 
 # Process the raw data from the EDT messages to comma delimited *.txt files
 def openFiles(txtFiles):
-    # Process txt files to csv files
-    for index in range(0, len(txtFiles)):
-        # Open the file stream to write the processed level0 data
-        fout = open(level1_path + txtFiles[index], 'wt')
-        # Go through each line and format it properly to convert to level1 data
-        with open(level0_path + txtFiles[index], 'r') as fp:
-            # Process each of the files
-            processLevel0Files(fout, fp)
-    # Convert file extensions to *.csv
-    flag = convertToCSV(txtFiles)
+    # Get the number of files in the level 1 directory
+    csvSize = len(os.listdir(level1_path))
+    # Check to see if the files have already been processed
+    if (csvSize == 0):
+        # Process txt files to csv files
+        for index in range(0, len(txtFiles)):
+            # Open the file stream to write the processed level0 data
+            fout = open(level1_path + txtFiles[index], 'wt')
+            # Go through each line and format it properly to convert to level1 data
+            with open(level0_path + txtFiles[index], 'r') as fp: processLevel0Files(fout, fp)
+        # Convert file extensions to *.csv
+        flag = convertToCSV(txtFiles)
+    # Files have already been processed, no need to process them again!
+    else:
+        flag = 'False'
     # Return - the flag that checks if there are files or not
     return flag
 
@@ -99,17 +105,25 @@ def findFiles():
 def main():
     # Obtain all level0 files in the directory
     txtFiles = findFiles()
+    txtSize = str(len(txtFiles))
     # For console debugging
-    print('\nPath: ' + level0_path + ' | Files found: ' + str(len(txtFiles)) + '\n')
+    print('\nPath: ' + level0_path + ' | Files found: ' + txtSize + '\n')
     # Open all of the level 0 files
     print('Converting *.txt files to *.csv files. This may take a second or two.\n')
     # Open files, check if there are files to convert
     flag = openFiles(txtFiles)
-    if flag == True:
+    if flag == 'True':
         # Message when finished
         print('\nDone. Your data is ready to plot. It can be found in /data/level1.')
+    elif flag == 'False':
+        # Message when files have already been converted
+        print('WARNING: The files have already been converted!')
+    elif flag == 'Null':
+        # Message when there are no files to convert
+        print('ERROR: No files were found in the /level0/ directory.')
     else:
-        # No files to convert!
+        # Message when something unexpected occurs
+        print('ERROR: Something unexpected has occurred. Please check the directories and the files.')
         return
 
 # Run the program
