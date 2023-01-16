@@ -9,7 +9,6 @@ Version History can be found in VERSIONS.md
 # Global imports
 import os
 import pandas as pd
-import webbrowser
 import folium as fm
 from folium.plugins import FloatImage
 
@@ -32,25 +31,13 @@ _jsonPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\geojson\\"
 # Static Images for plotting
 _compassRose = ("https://raw.githubusercontent.com/ocefpaf/secoora_assets_map/a250729bbcf2ddd12f46912d36c33f7539131bec/secoora_icons/rose.png")
 
-# Opens each sounding plot into a tab in the browser
-def openIntoBrowser(files, numberOfFiles, numberDisplayedFiles, cleanedName):
-    # Checks if there are files
-    if len(files) != 0:
-        # Counter for the number of files
-        numberOfFiles += 1
-        # Limit the number of files opened in the browser (to not overload hardware...)
-        if numberOfFiles <= numberDisplayedFiles:
-            webbrowser.open('file:///C:/Users/hunlr/Desktop/sounding_plot_3D/viewer/' + cleanedName + '.html')
-    # Return - the updated numberOfFiles
-    return numberOfFiles
-
 # Check for sections of missing data points (if difference is greater than 1, there is missing data!)
 def checkMissingData(currentPoint, previousPoint):
     # Return - the absolute difference between the two point indexes in question
     return abs((currentPoint) - (previousPoint))
 
 # Plots the first valid point for each mandatory level on the sounding
-def plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags):
+def plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile):
     # Plot the ascending balloon data points
     if _flags['925mb'] == False:
         # Sounding made it to 925mb
@@ -175,7 +162,7 @@ def plotMandatoryPoints(index, pressureList, locationList, info, point, previous
     # This checks the absolute difference between the current and previous point, if its greater than 1 - its missing data there!
     if checkMissingData(point, previousPoint) != 1 and point != 9998: # Do not include the termination point
         # Message to console
-        print('WARNING: Missing data found at ' + str(pressureList[previousPoint]) + 'mb, some data in the file below may not be plotted.')
+        print('WARNING: Missing data found at ' + str(pressureList[previousPoint]) + 'mb in \'' + currentFile + '\'.')
     elif point == 9998:
         # Termination location (The last point of the dataset)
         fm.Marker(
@@ -184,7 +171,7 @@ def plotMandatoryPoints(index, pressureList, locationList, info, point, previous
         ).add_to(sounding_plot)
 
 # Takes in the parsed data and base map and then plots the parsed data onto the folium basemap
-def plotData(locationList, pressureList, pointsList, sounding_plot, _flags):
+def plotData(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile):
     # Get the size of the list of locations for index information
     size = len(locationList)
     # Cycle through the data and add the balloon data points to the folium map
@@ -201,7 +188,7 @@ def plotData(locationList, pressureList, pointsList, sounding_plot, _flags):
         # Information for each new data point in the plot
         info = (str(pressureList[index]) + 'mb')
         # Plot mandatory points on the sounding
-        plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags)
+        plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile)
     # Create the trajectory of the weather balloon
     fm.PolyLine(
         locationList, color = "grey", weight = "4").add_to(sounding_plot)
@@ -256,28 +243,28 @@ def readData(currentFile):
 
 # Generate each sounding plot
 def generatePlots(files, _flags):
-    # Count the files as they are open and the number of files to be displayed
-    numberOfFiles = 0
-    numberDisplayedFiles = 5
     # Go through each *.csv file and plot the data on a new html page
     for currentFile in files:
         # Function calls for the program to function
         data, file = readData(currentFile)
         sounding_plot = createBasemap()
         locationList, pressureList, pointsList = parseData(data)
-        # Plot the data
-        plotData(locationList, pressureList, pointsList, sounding_plot, _flags)
-        # Clean up the name and then save the html file in the directory
-        removeFront = file.replace('edt_', '')
-        cleanedName = removeFront.replace('.csv', '')
-        # Save each sounding plot
-        sounding_plot.save('viewer/' + cleanedName + '.html')
-        # Open each sounding plot in a new tab in the browser (automatically shows up to 5 in the browser)
-        numberOfFiles = openIntoBrowser(files, numberOfFiles, numberDisplayedFiles, cleanedName)
-        # Message to console
-        print(currentFile + " has been saved.")
-        # Reset flags to plot the mandatory levels for the next plot
-        _flags = {flag: False for flag in _flags}
+        # Check if sounding data made it beyond 400mb (was successful ~1500 points)
+        if len(data) >= 1500:
+            # Plot the data
+            plotData(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile)
+            # Clean up the name and then save the html file in the directory
+            removeFront = file.replace('edt_', '')
+            cleanedName = removeFront.replace('.csv', '')
+            # Save each sounding plot
+            sounding_plot.save('viewer/' + cleanedName + '.html')
+            # Message to console
+            print(currentFile + " has been saved.")
+            # Reset flags to plot the mandatory levels for the next plot
+            _flags = {flag: False for flag in _flags}
+        # Not enough data for successful release!
+        else:
+            print('ERROR: The radiosonde data in \'' + currentFile + '\' was not successful to 400mb. The data will not be plotted.')
 
 # Looks through the level1 files to obtain the filename and the count
 def findFiles():
@@ -308,7 +295,7 @@ def main():
         print("\nThe soundings have been plotted. It can be viewed in the browser from the '/viewer/' directory.")
     else:
         # No files found!
-        print('WARNING: No files were found in the /level1/ directory.')
+        print('ERROR: No files were found in the /level1/ directory.')
 
 # Run the program
 main()
