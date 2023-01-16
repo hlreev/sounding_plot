@@ -14,5 +14,4 @@ The program takes the latitude, longitude, and geometric altitude data from weat
 - Add geometric altitude data for a 3D trajectory
 
 ## Stretch Goals
-- Have both 2D and 3D trajectories plotted simultaneously
 - Add further data analysis capabilities to the program
