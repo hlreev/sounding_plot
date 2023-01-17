@@ -41,7 +41,7 @@ def plotSkewT(temp, dewp, pres, cleanedName):
     # Create a new figure. The dimensions here give a good aspect ratio
     fig = plt.figure(figsize=(6.5875, 6.2125))
     ax = fig.add_subplot(111)
-    ax.grid(True)
+    ax.yaxis.grid()
     plt.title(' FWD ' + soundingName + ' (Observed)', fontsize=14, loc='left')
     # Plot data using the log-p axes
     ax.semilogy(temp, pres, 'r', lw=2)
@@ -285,8 +285,9 @@ def generatePlots(files, _flags):
             cleanedName = removeFront.replace('.csv', '')
             # Plot the SkewT sounding and save in /soundings/ directory
             plotSkewT(temp, dewp, pres, cleanedName)
-            # Save the SkewT sounding
+            # Save the SkewT sounding then close it
             plt.savefig(_soundingPath + cleanedName + '.png')
+            plt.close()
             # Save each balloon trajectory
             sounding_plot.save('viewer/' + cleanedName + '.html')
             # Message to console
