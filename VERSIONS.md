@@ -1,6 +1,11 @@
 # Sounding Plot Viewer Patches and Updates
 All versions of Sounding Plot Viewer will be documented here, along with the changelog and bug fixes
 
+## Version 1.0.0 (Date Finished - 01/16/2023)
+- Cleaned up the code a bit and made it somewhat easier to read
+- Can now plot simple skewT soundings
+- Minor changes and tweaks
+
 ## Version 0.9.8-pre (Date Finished - 01/08/2023)
 - Cleaned up the code a bit and made it somewhat easier to read
 - Can now check for missing data

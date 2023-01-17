@@ -9,6 +9,8 @@ Version History can be found in VERSIONS.md
 # Global imports
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 import folium as fm
 from folium.plugins import FloatImage
 
@@ -28,8 +30,28 @@ _polyColor = {'fillColor': '#00ddff', 'color': '#adaaaa'}
 # For file management
 _csvPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot\\data\\level1\\"
 _jsonPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot\\data\\geojson\\"
+_soundingPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot\\soundings\\"
 # Static Images for plotting
 _compassRose = ("C:\\Users\\hunlr\\Desktop\\sounding_plot\\images\\rose.png")
+
+# Plot the sounding
+def plotSkewT(temp, dewp, pres, cleanedName):
+    # Clean name further for use in title
+    soundingName = cleanedName.replace('_', '/')
+    # Create a new figure. The dimensions here give a good aspect ratio
+    fig = plt.figure(figsize=(6.5875, 6.2125))
+    ax = fig.add_subplot(111)
+    ax.grid(True)
+    plt.title(' FWD ' + soundingName + ' (Observed)', fontsize=14, loc='left')
+    # Plot data using the log-p axes
+    ax.semilogy(temp, pres, 'r', lw=2)
+    ax.semilogy(dewp, pres, 'g', lw=2)
+    # Disables the log-formatting that comes with semilogy
+    ax.yaxis.set_major_formatter(plt.ScalarFormatter())
+    ax.set_yticks(np.linspace(100, 1000, 10))
+    ax.set_ylim(1050, 100)
+    ax.xaxis.set_major_locator(plt.MultipleLocator(10))
+    ax.set_xlim(-90, 50)
 
 # Check for sections of missing data points (if difference is greater than 1, there is missing data!)
 def checkMissingData(currentPoint, previousPoint):
@@ -171,7 +193,7 @@ def plotMandatoryPoints(index, pressureList, locationList, info, point, previous
         ).add_to(sounding_plot)
 
 # Takes in the parsed data and base map and then plots the parsed data onto the folium basemap
-def plotData(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile):
+def plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile):
     # Get the size of the list of locations for index information
     size = len(locationList)
     # Cycle through the data and add the balloon data points to the folium map
@@ -202,8 +224,13 @@ def parseData(data):
     pressureList = pressures.values.tolist() # Use for pressure heights
     points = data['n'] 
     pointsList = points.values.tolist() # Use for data point count
+    # Obtain the temperatures and dewpoints
+    temp = data['Temp']
+    dewp = data['Dewp']
+    # Obtain the pressures (reverse the order)
+    pres = data['P']
     # Return: parsed data
-    return locationList, pressureList, pointsList
+    return locationList, pressureList, pointsList, temp, dewp, pres
 
 # Creates a basemap with folium and some starting points for the FWD office and upper-air building
 def createBasemap():
@@ -248,15 +275,19 @@ def generatePlots(files, _flags):
         # Function calls for the program to function
         data, file = readData(currentFile)
         sounding_plot = createBasemap()
-        locationList, pressureList, pointsList = parseData(data)
+        locationList, pressureList, pointsList, temp, dewp, pres = parseData(data)
         # Check if sounding data made it beyond 400mb (was successful ~1500 points)
         if len(data) >= 1500:
-            # Plot the data
-            plotData(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile)
+            # Plot the balloon data
+            plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile)
             # Clean up the name and then save the html file in the directory
             removeFront = file.replace('edt_', '')
             cleanedName = removeFront.replace('.csv', '')
-            # Save each sounding plot
+            # Plot the SkewT sounding and save in /soundings/ directory
+            plotSkewT(temp, dewp, pres, cleanedName)
+            # Save the SkewT sounding
+            plt.savefig(_soundingPath + cleanedName + '.png')
+            # Save each balloon trajectory
             sounding_plot.save('viewer/' + cleanedName + '.html')
             # Message to console
             print(currentFile + " has been saved.")
