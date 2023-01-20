@@ -28,11 +28,11 @@ _iconcolor = 'white'
 # Styles for the Backup Offices
 _polyColor = {'fillColor': '#00ddff', 'color': '#adaaaa'}
 # For file management
-_csvPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot\\data\\level1\\"
-_jsonPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot\\data\\geojson\\"
-_soundingPath = "C:\\Users\\hunlr\\Desktop\\sounding_plot\\soundings\\"
+_csvPath = "data\\level1\\"
+_jsonPath = "data\\geojson\\"
+_soundingPath = "soundings\\"
 # Static Images for plotting
-_compassRose = ("C:\\Users\\hunlr\\Desktop\\sounding_plot\\images\\rose.png")
+_compassRose = ("..\\images\\rose.png")
 
 # Plot the sounding
 def plotSkewT(temp, dewp, pres, cleanedName):
@@ -317,8 +317,6 @@ def main():
                 '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False }
     # Obtain the file names for use later when saving the plots
     files = findFiles()
-    # Message for the console
-    print('\nPath: ' + _csvPath + ' | Files found: ' + str(len(files)) + '\n')
     # Generate each soudning plot - bulk of the code is executed here
     generatePlots(files, _flags)
     # Check if there are files in the level1 directory

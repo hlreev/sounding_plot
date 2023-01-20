@@ -17,10 +17,10 @@ __email__ = 'hunter.reeves@noaa.gov'
 __status__ = 'In Production'
 
 # Level0 variables
-level0_path = 'C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level0\\'
+level0_path = 'data\\level0\\'
 level0_ext = '.txt'
 # Level1 variables
-level1_path = 'C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level1\\'
+level1_path = 'data\\level1\\'
 level1_ext = '.txt'
 
 # Convert processed data files to *.csv files
@@ -28,17 +28,15 @@ def convertToCSV(txtFiles):
     # Counter and size for processed files
     count = 0
     txtSize = len(txtFiles)
-    # Folder that holds files to change
-    folder = 'C:\\Users\\hunlr\\Desktop\\sounding_plot_3D\\data\\level1\\'
     # Directory holding all of the *.csv files
-    csvFiles = os.listdir(folder)
+    csvFiles = os.listdir(level1_path)
     # Check for when there are no files to convert in the level 0 directory
     if txtSize == 0:
         # Return - flag for checking if there were files or not
         return None
     # Convert files to *.csv
     for filename in csvFiles:
-        infilename = os.path.join(folder, filename)
+        infilename = os.path.join(level1_path, filename)
         if not os.path.isfile(infilename): continue
         # Change the extension to *.csv
         csv_ext = infilename.replace('.txt', '.csv')
@@ -105,9 +103,6 @@ def findFiles():
 def main():
     # Obtain all level0 files in the directory
     txtFiles = findFiles()
-    txtSize = str(len(txtFiles))
-    # For console debugging
-    print('\nPath: ' + level0_path + ' | Files found: ' + txtSize + '\n')
     # Open all of the level 0 files
     print('Converting *.txt files to *.csv files. This may take a second or two.\n')
     # Open files, check if there are files to convert
