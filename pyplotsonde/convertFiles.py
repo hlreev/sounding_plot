@@ -109,13 +109,13 @@ def main():
     flag = openFiles(txtFiles)
     if flag == True:
         # Message when finished
-        print('\nDone. Your data is ready to plot. It can be found in /data/level1.')
+        print('\nDone. Your data is ready to plot. It can be found in ./sounding_plot/data/level1.')
     elif flag == False:
         # Message when files have already been converted
         print('WARNING: The files have already been converted!')
     elif flag == None:
         # Message when there are no files to convert
-        print('ERROR: No files were found in the /level0/ directory.')
+        print('ERROR: No files were found in ./sounding_plot/data/level0.')
     else:
         # Message when something unexpected occurs
         print('ERROR: Something unexpected has occurred. Please check the directories and the files.')

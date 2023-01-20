@@ -11,7 +11,9 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import base64
 import folium as fm
+from folium import IFrame
 from folium.plugins import FloatImage
 
 # Metadata
@@ -31,27 +33,35 @@ _polyColor = {'fillColor': '#00ddff', 'color': '#adaaaa'}
 _csvPath = "data\\level1\\"
 _jsonPath = "data\\geojson\\"
 _soundingPath = "soundings\\"
-# Static Images for plotting
+# Static image for a compass rose
 _compassRose = ("..\\images\\rose.png")
 
 # Plot the sounding
 def plotSkewT(temp, dewp, pres, cleanedName):
+    # Local import to access classes for plotting a skewT sounding
+    import SkewT
+    # Register the projection for the SkewT plot
+    SkewT.register_projection(SkewT.SkewXAxes)
     # Clean name further for use in title
     soundingName = cleanedName.replace('_', '/')
     # Create a new figure. The dimensions here give a good aspect ratio
-    fig = plt.figure(figsize=(6.5875, 6.2125))
-    ax = fig.add_subplot(111)
-    ax.yaxis.grid()
-    plt.title(' FWD ' + soundingName + ' (Observed)', fontsize=14, loc='left')
+    fig = plt.figure(figsize = (6.5875, 6.2125))
+    ax = fig.add_subplot(projection = "skewx")
+    # Add the grid and title
+    plt.grid(True)
+    plt.title(' FWD ' + soundingName + ' (Observed)', fontsize = 14, loc = 'left')
     # Plot data using the log-p axes
-    ax.semilogy(temp, pres, 'r', lw=2)
-    ax.semilogy(dewp, pres, 'g', lw=2)
+    ax.semilogy(temp, pres, color = 'C3', lw = 2)
+    ax.semilogy(dewp, pres, color = 'C2', lw = 2)
     # Disables the log-formatting that comes with semilogy
     ax.yaxis.set_major_formatter(plt.ScalarFormatter())
     ax.set_yticks(np.linspace(100, 1000, 10))
     ax.set_ylim(1050, 100)
     ax.xaxis.set_major_locator(plt.MultipleLocator(10))
-    ax.set_xlim(-90, 50)
+    ax.set_xlim(-50, 50)
+    # Add lines for 0C and -20C
+    ax.axvline(0, color = 'C0', ls = '--')
+    ax.axvline(-20, color = 'C0', ls = '--')
 
 # Check for sections of missing data points (if difference is greater than 1, there is missing data!)
 def checkMissingData(currentPoint, previousPoint):
@@ -286,8 +296,16 @@ def generatePlots(files, _flags):
             # Plot the SkewT sounding and save in /soundings/ directory
             plotSkewT(temp, dewp, pres, cleanedName)
             # Save the SkewT sounding then close it
-            plt.savefig(_soundingPath + cleanedName + '.png')
+            currentSounding = _soundingPath + cleanedName + '.png'
+            plt.savefig(currentSounding)
             plt.close()
+            # Encode the sounding images and then add them to the plot for viewing from a marker
+            sounding = "..\\" + currentSounding
+            encoded = base64.b64encode(open(currentSounding, 'rb').read())
+            html = '<img src="data:image/png;base64,{}">'.format
+            iframe = IFrame(html(encoded.decode('UTF-8')), width = 670, height = 650)
+            popup = fm.Popup(iframe, max_width = 800)
+            fm.Marker(location=[32.83, -97.29], tooltip = "Click to show sounding.", popup = popup, icon = fm.Icon(color = 'gray')).add_to(sounding_plot)
             # Save each balloon trajectory
             sounding_plot.save('viewer/' + cleanedName + '.html')
             # Message to console
@@ -322,7 +340,7 @@ def main():
     # Check if there are files in the level1 directory
     if len(files) != 0:
         # Print the message for debugging at the end of the program running
-        print("\nThe soundings have been plotted. It can be viewed in the browser from the '/viewer/' directory.")
+        print("\nThe soundings have been plotted. It can be viewed in the browser from './sounding_plot/viewer'.")
     else:
         # No files found!
         print('ERROR: No files were found in the /level1/ directory.')

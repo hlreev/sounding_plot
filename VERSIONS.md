@@ -3,8 +3,10 @@ All versions of Sounding Plot Viewer will be documented here, along with the cha
 
 ## Version 1.0.0 (Date Finished - 01/16/2023)
 - Cleaned up the code a bit and made it somewhat easier to read
-- Can now plot simple skewT soundings
+- Can now plot simple soundings
 - Edited the axes for the grid lines
+- Updated absolute paths to relative paths
+- Updated the sounding to be a skewT
 - Minor changes and tweaks
 
 ## Version 0.9.8-pre (Date Finished - 01/08/2023)
