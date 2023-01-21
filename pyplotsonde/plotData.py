@@ -35,6 +35,9 @@ _jsonPath = "data\\geojson\\"
 _soundingPath = "soundings\\"
 # Static image for a compass rose
 _compassRose = ("..\\images\\rose.png")
+# Location of Fort Worth's NWS Office
+_upperair = [32.83508, -97.29794]
+_fwd = [32.83488493770296, -97.29873660246302]
 
 # Plot the sounding
 def plotSkewT(temp, dewp, pres, cleanedName):
@@ -46,9 +49,9 @@ def plotSkewT(temp, dewp, pres, cleanedName):
     soundingName = cleanedName.replace('_', '/')
     # Create a new figure. The dimensions here give a good aspect ratio
     fig = plt.figure(figsize = (6.5875, 6.2125))
-    ax = fig.add_subplot(projection = "skewx")
+    ax = fig.add_subplot(111, projection = "skewx")
     # Add the grid and title
-    plt.grid(True)
+    plt.grid(True, ls = '--')
     plt.title(' FWD ' + soundingName + ' (Observed)', fontsize = 14, loc = 'left')
     # Plot data using the log-p axes
     ax.semilogy(temp, pres, color = 'C3', lw = 2)
@@ -59,9 +62,9 @@ def plotSkewT(temp, dewp, pres, cleanedName):
     ax.set_ylim(1050, 100)
     ax.xaxis.set_major_locator(plt.MultipleLocator(10))
     ax.set_xlim(-50, 50)
-    # Add lines for 0C and -20C
-    ax.axvline(0, color = 'C0', ls = '--')
-    ax.axvline(-20, color = 'C0', ls = '--')
+    # Add lines for 0C and -20C (ice growth region)
+    ax.axvline(0, color = 'C0', ls = '--', lw = 1)
+    ax.axvline(-20, color = 'C0', ls = '--', lw = 1)
 
 # Check for sections of missing data points (if difference is greater than 1, there is missing data!)
 def checkMissingData(currentPoint, previousPoint):
@@ -245,8 +248,7 @@ def parseData(data):
 # Creates a basemap with folium and some starting points for the FWD office and upper-air building
 def createBasemap():
     # Create the base map
-    fwd = [32.8350, -97.2986] # coordinates to the fort worth wfo
-    sounding_plot = fm.Map(location = fwd,  zoom_start = 15, control_scale = True, tiles = None)
+    sounding_plot = fm.Map(location = _fwd,  zoom_start = 15, control_scale = True, tiles = None)
     # Adds the county polygons for the FWD CWA from a geojson file
     fm.GeoJson(_jsonPath + 'FWD.geojson', name = 'Fort Worth CWA').add_to(sounding_plot)
     # Add the backup office polygon CWAs from geojson files
@@ -263,9 +265,8 @@ def createBasemap():
     # Add the tile layer control
     fm.LayerControl().add_to(sounding_plot)
     # Adds the release point for the balloon and location of FWD office (upper air building)
-    upperair = [32.83508, -97.29794]
-    _location = "Latitude: " + str(upperair[0]) + ", Longitude: " + str(upperair[1])
-    fm.Marker(upperair, popup = _location, tooltip = "FWD Upper Air", icon = fm.Icon(color = "darkblue", icon_color = "white", icon = "glyphicon glyphicon-home")).add_to(sounding_plot)
+    _location = "Latitude: " + str(_upperair[0]) + ", Longitude: " + str(_upperair[1])
+    fm.Marker(_upperair, popup = _location, tooltip = "FWD Upper Air", icon = fm.Icon(color = "darkblue", icon_color = "white", icon = "glyphicon glyphicon-home")).add_to(sounding_plot)
     # Return: basemap
     return sounding_plot
 
@@ -300,12 +301,11 @@ def generatePlots(files, _flags):
             plt.savefig(currentSounding)
             plt.close()
             # Encode the sounding images and then add them to the plot for viewing from a marker
-            sounding = "..\\" + currentSounding
             encoded = base64.b64encode(open(currentSounding, 'rb').read())
             html = '<img src="data:image/png;base64,{}">'.format
             iframe = IFrame(html(encoded.decode('UTF-8')), width = 670, height = 650)
             popup = fm.Popup(iframe, max_width = 800)
-            fm.Marker(location=[32.83, -97.29], tooltip = "Click to show sounding.", popup = popup, icon = fm.Icon(color = 'gray')).add_to(sounding_plot)
+            fm.Marker(location = _fwd, tooltip = "Click to show sounding.", popup = popup, icon = fm.Icon(color = 'gray')).add_to(sounding_plot)
             # Save each balloon trajectory
             sounding_plot.save('viewer/' + cleanedName + '.html')
             # Message to console
@@ -335,6 +335,8 @@ def main():
                 '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False }
     # Obtain the file names for use later when saving the plots
     files = findFiles()
+    # Message to indicate the start
+    print('\nPlotting trajectories and skew-T soundings...')
     # Generate each soudning plot - bulk of the code is executed here
     generatePlots(files, _flags)
     # Check if there are files in the level1 directory
