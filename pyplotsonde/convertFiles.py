@@ -8,7 +8,6 @@ Version History can be found in VERSIONS.md
 
 # Global imports
 import os
-import time
 from progress.bar import IncrementalBar
 
 # Metadata
@@ -27,8 +26,7 @@ level1_ext = '.txt'
 
 # Convert processed data files to *.csv files
 def convertToCSV(txtFiles):
-    # Counter and size for processed files
-    count = 0
+    # Size for processed files
     txtSize = len(txtFiles)
     # Directory holding all of the *.csv files
     csvFiles = os.listdir(level1_path)
@@ -44,14 +42,11 @@ def convertToCSV(txtFiles):
         csv_ext = infilename.replace('.txt', '.csv')
         # Change the name of the file
         os.rename(infilename, csv_ext)
-        # Increment counter to keep track of how many files have been processed
-        count += 1
-        print(str(count) + '/' + str(txtSize) + ' files converted.')
-    # Return - the flag for found files
+    # Return - the flag for found files and the progress bar
     return True
 
 # Read all the lines in each raw *.txt file and filter the data
-def processLevel0Files(fout, fp):
+def processLevel0Files(fout, fp, progressBar):
     # Read all of the lines in the raw *.txt file
     lines = fp.readlines()
     # Go through the level0 data
@@ -64,11 +59,13 @@ def processLevel0Files(fout, fp):
             # Repace the spaces with commas for *.csv reading
             fout.write(','.join(row.split()))
             fout.write('\n')
+    # Continue the progress bar to the next state in the terminal console after each file is processed
+    progressBar.next()
     # Close the file stream
     fout.close()
 
 # Process the raw data from the EDT messages to comma delimited *.txt files
-def openFiles(txtFiles):
+def openFiles(txtFiles, progressBar):
     # Get the number of files in the level 1 directory
     csvSize = len(os.listdir(level1_path))
     # Check to see if the files have already been processed
@@ -78,7 +75,7 @@ def openFiles(txtFiles):
             # Open the file stream to write the processed level0 data
             fout = open(level1_path + txtFiles[index], 'wt')
             # Go through each line and format it properly to convert to level1 data
-            with open(level0_path + txtFiles[index], 'r') as fp: processLevel0Files(fout, fp)
+            with open(level0_path + txtFiles[index], 'r') as fp: processLevel0Files(fout, fp, progressBar)
         # Convert file extensions to *.csv
         flag = convertToCSV(txtFiles)
     # Files have already been processed, no need to process them again!
@@ -106,10 +103,14 @@ def main():
     # Obtain all level0 files in the directory
     txtFiles = findFiles()
     # Open all of the level 0 files
-    print('\nConverting *.txt files to *.csv files. This could take a few seconds.\n')
+    print('\nConverting *.txt files to *.csv files. This could take a few moments.\n')
+    # Initializes incremental progress bar with the max size of the file length data
+    progressBar = IncrementalBar('Processing', max = len(txtFiles), suffix='%(index)d/%(max)d files [%(elapsed_td)s / %(eta_td)s]')
     # Open files, check if there are files to convert
-    flag = openFiles(txtFiles)
+    flag = openFiles(txtFiles, progressBar)
     if flag == True:
+        # Progress bar is finished!
+        progressBar.finish()
         # Message when finished
         print('\nDone. Your data is ready to plot. The data can be found in ./sounding_plot/data/level1.')
     elif flag == False:
