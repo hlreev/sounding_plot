@@ -1,6 +1,12 @@
 # Sounding Plot Viewer Patches and Updates
 All versions of Sounding Plot Viewer will be documented here, along with the changelog and bug fixes
 
+## Version 1.0.1 (Date Finished - 08/06/2023)
+- Edited the text for some of the console output to make more sense
+- Cleaned up the code a bit and made it somewhat easier to read
+- Tweaked/updated gitignore
+- Minor changes and tweaks
+
 ## Version 1.0.0 (Date Finished - 01/16/2023)
 - Cleaned up the code a bit and made it somewhat easier to read
 - Can now plot simple soundings

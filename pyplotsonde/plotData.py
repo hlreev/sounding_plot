@@ -309,7 +309,7 @@ def generatePlots(files, _flags):
             # Save each balloon trajectory
             sounding_plot.save('viewer/' + cleanedName + '.html')
             # Message to console
-            print(currentFile + " has been saved.")
+            print(cleanedName + '.html' + " has been saved.")
             # Reset flags to plot the mandatory levels for the next plot
             _flags = {flag: False for flag in _flags}
         # Not enough data for successful release!
@@ -336,16 +336,16 @@ def main():
     # Obtain the file names for use later when saving the plots
     files = findFiles()
     # Message to indicate the start
-    print('\nPlotting trajectories and skew-T soundings...')
+    print('\nPlotting trajectories and skew-T soundings...\n')
     # Generate each soudning plot - bulk of the code is executed here
     generatePlots(files, _flags)
     # Check if there are files in the level1 directory
     if len(files) != 0:
         # Print the message for debugging at the end of the program running
-        print("\nThe soundings have been plotted. It can be viewed in the browser from './sounding_plot/viewer'.")
+        print("\nThe trajectories and soundings have been plotted. They can be viewed in the browser from './viewer/YYYYMMDD_HHmm.html'.")
     else:
         # No files found!
-        print('ERROR: No files were found in the /level1/ directory.')
+        print('\nERROR: No files were found in the /level1/ directory.')
 
 # Run the program
 main()
