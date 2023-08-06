@@ -8,6 +8,8 @@ Version History can be found in VERSIONS.md
 
 # Global imports
 import os
+import time
+from progress.bar import IncrementalBar
 
 # Metadata
 __author__ = 'Hunter L Reeves'
@@ -104,12 +106,12 @@ def main():
     # Obtain all level0 files in the directory
     txtFiles = findFiles()
     # Open all of the level 0 files
-    print('Converting *.txt files to *.csv files. This may take a second or two.\n')
+    print('\nConverting *.txt files to *.csv files. This could take a few seconds.\n')
     # Open files, check if there are files to convert
     flag = openFiles(txtFiles)
     if flag == True:
         # Message when finished
-        print('\nDone. Your data is ready to plot. It can be found in ./sounding_plot/data/level1.')
+        print('\nDone. Your data is ready to plot. The data can be found in ./sounding_plot/data/level1.')
     elif flag == False:
         # Message when files have already been converted
         print('WARNING: The files have already been converted!')
