@@ -15,6 +15,7 @@ import base64
 import folium as fm
 from folium import IFrame
 from folium.plugins import FloatImage
+from progress.bar import IncrementalBar
 
 # Metadata
 __author__ = 'Hunter L Reeves'
@@ -72,7 +73,7 @@ def checkMissingData(currentPoint, previousPoint):
     return abs((currentPoint) - (previousPoint))
 
 # Plots the first valid point for each mandatory level on the sounding
-def plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile):
+def plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile, missingDataFlag):
     # Plot the ascending balloon data points
     if _flags['925mb'] == False:
         # Sounding made it to 925mb
@@ -195,9 +196,11 @@ def plotMandatoryPoints(index, pressureList, locationList, info, point, previous
             ).add_to(sounding_plot)
             _flags['10mb'] = True
     # This checks the absolute difference between the current and previous point, if its greater than 1 - its missing data there!
-    if checkMissingData(point, previousPoint) != 1 and point != 9998: # Do not include the termination point
+    if checkMissingData(point, previousPoint) != 1 and point != 9998 and missingDataFlag == False: # Do not include the termination point
         # Message to console
-        print('WARNING: Missing data found at ' + str(pressureList[previousPoint]) + 'mb in \'' + currentFile + '\'.')
+        print('\nWARNING: Missing data found in \'' + currentFile + '\'')
+        # Trip the missing data flag
+        missingDataFlag = True
     elif point == 9998:
         # Termination location (The last point of the dataset)
         fm.Marker(
@@ -206,7 +209,7 @@ def plotMandatoryPoints(index, pressureList, locationList, info, point, previous
         ).add_to(sounding_plot)
 
 # Takes in the parsed data and base map and then plots the parsed data onto the folium basemap
-def plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile):
+def plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile, missingDataFlag):
     # Get the size of the list of locations for index information
     size = len(locationList)
     # Cycle through the data and add the balloon data points to the folium map
@@ -223,7 +226,7 @@ def plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags
         # Information for each new data point in the plot
         info = (str(pressureList[index]) + 'mb')
         # Plot mandatory points on the sounding
-        plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile)
+        plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile, missingDataFlag)
     # Create the trajectory of the weather balloon
     fm.PolyLine(
         locationList, color = "grey", weight = "4").add_to(sounding_plot)
@@ -280,17 +283,19 @@ def readData(currentFile):
     return data, currentFile
 
 # Generate each sounding plot
-def generatePlots(files, _flags):
+def generatePlots(files, _flags, progressBar):
     # Go through each *.csv file and plot the data on a new html page
     for currentFile in files:
         # Function calls for the program to function
         data, file = readData(currentFile)
         sounding_plot = createBasemap()
         locationList, pressureList, pointsList, temp, dewp, pres = parseData(data)
+        # Missing data flag for one instance (used for indicating if there is missing data in a file, once missing data is detected - trip the flag)
+        missingDataFlag = False
         # Check if sounding data made it beyond 400mb (was successful ~1500 points)
         if len(data) >= 1500:
             # Plot the balloon data
-            plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile)
+            plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile, missingDataFlag)
             # Clean up the name and then save the html file in the directory
             removeFront = file.replace('edt_', '')
             cleanedName = removeFront.replace('.csv', '')
@@ -308,13 +313,13 @@ def generatePlots(files, _flags):
             fm.Marker(location = _fwd, tooltip = "Click to show sounding.", popup = popup, icon = fm.Icon(color = 'gray')).add_to(sounding_plot)
             # Save each balloon trajectory
             sounding_plot.save('viewer/' + cleanedName + '.html')
-            # Message to console
-            print(cleanedName + '.html' + " has been saved.")
+            # Continue the progress bar to the next state in the terminal console after each file is processed
+            progressBar.next()
             # Reset flags to plot the mandatory levels for the next plot
             _flags = {flag: False for flag in _flags}
         # Not enough data for successful release!
         else:
-            print('ERROR: The radiosonde data in \'' + currentFile + '\' was not successful to 400mb. The data will not be plotted.')
+            print('\nERROR: The radiosonde data in \'' + currentFile + '\' was not successful to 400mb. The data will not be plotted.')
 
 # Looks through the level1 files to obtain the filename and the count
 def findFiles():
@@ -337,10 +342,14 @@ def main():
     files = findFiles()
     # Message to indicate the start
     print('\nPlotting trajectories and skew-T soundings...\n')
+    # Initializes incremental progress bar with the max size of the file length data
+    progressBar = IncrementalBar('Plotting', max = len(files), suffix='%(index)d/%(max)d files [%(elapsed_td)s / %(eta_td)s]')
     # Generate each soudning plot - bulk of the code is executed here
-    generatePlots(files, _flags)
+    generatePlots(files, _flags, progressBar)
     # Check if there are files in the level1 directory
     if len(files) != 0:
+        # Progress bar is finished!
+        progressBar.finish()
         # Print the message for debugging at the end of the program running
         print("\nThe trajectories and soundings have been plotted. They can be viewed in the browser from './viewer/YYYYMMDD_HHmm.html'.")
     else:

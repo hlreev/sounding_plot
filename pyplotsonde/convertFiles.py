@@ -105,7 +105,7 @@ def main():
     # Open all of the level 0 files
     print('\nConverting *.txt files to *.csv files. This could take a few moments.\n')
     # Initializes incremental progress bar with the max size of the file length data
-    progressBar = IncrementalBar('Processing', max = len(txtFiles), suffix='%(index)d/%(max)d files [%(elapsed_td)s / %(eta_td)s]')
+    progressBar = IncrementalBar('Converting', max = len(txtFiles), suffix='%(index)d/%(max)d files [%(elapsed_td)s / %(eta_td)s]')
     # Open files, check if there are files to convert
     flag = openFiles(txtFiles, progressBar)
     if flag == True:
