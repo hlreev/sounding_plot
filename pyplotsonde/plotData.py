@@ -39,6 +39,8 @@ _compassRose = ("..\\images\\rose.png")
 # Location of Fort Worth's NWS Office
 _upperair = [32.83508, -97.29794]
 _fwd = [32.83488493770296, -97.29873660246302]
+# Flag to check for missing data
+missingDataFlag = False
 
 # Plot the sounding
 def plotSkewT(temp, dewp, pres, cleanedName):
@@ -73,7 +75,7 @@ def checkMissingData(currentPoint, previousPoint):
     return abs((currentPoint) - (previousPoint))
 
 # Plots the first valid point for each mandatory level on the sounding
-def plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile, missingDataFlag):
+def plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile):
     # Plot the ascending balloon data points
     if _flags['925mb'] == False:
         # Sounding made it to 925mb
@@ -196,11 +198,14 @@ def plotMandatoryPoints(index, pressureList, locationList, info, point, previous
             ).add_to(sounding_plot)
             _flags['10mb'] = True
     # This checks the absolute difference between the current and previous point, if its greater than 1 - its missing data there!
-    if checkMissingData(point, previousPoint) != 1 and point != 9998 and missingDataFlag == False: # Do not include the termination point
-        # Message to console
-        print('\nWARNING: Missing data found in \'' + currentFile + '\'')
-        # Trip the missing data flag
-        missingDataFlag = True
+    if checkMissingData(point, previousPoint) != 1 and point != 9998: # Do not include the termination point
+        global missingDataFlag
+        # Flag for missing data, only notify user once of missing data (ignore otherwise)
+        if missingDataFlag == False:
+            # Message to console
+            print('\nWARNING: Missing data found in \'' + currentFile + '\'')
+            # Trip the missing data flag
+            missingDataFlag = True
     elif point == 9998:
         # Termination location (The last point of the dataset)
         fm.Marker(
@@ -209,7 +214,7 @@ def plotMandatoryPoints(index, pressureList, locationList, info, point, previous
         ).add_to(sounding_plot)
 
 # Takes in the parsed data and base map and then plots the parsed data onto the folium basemap
-def plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile, missingDataFlag):
+def plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile):
     # Get the size of the list of locations for index information
     size = len(locationList)
     # Cycle through the data and add the balloon data points to the folium map
@@ -226,7 +231,7 @@ def plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags
         # Information for each new data point in the plot
         info = (str(pressureList[index]) + 'mb')
         # Plot mandatory points on the sounding
-        plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile, missingDataFlag)
+        plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile)
     # Create the trajectory of the weather balloon
     fm.PolyLine(
         locationList, color = "grey", weight = "4").add_to(sounding_plot)
@@ -290,12 +295,10 @@ def generatePlots(files, _flags, progressBar):
         data, file = readData(currentFile)
         sounding_plot = createBasemap()
         locationList, pressureList, pointsList, temp, dewp, pres = parseData(data)
-        # Missing data flag for one instance (used for indicating if there is missing data in a file, once missing data is detected - trip the flag)
-        missingDataFlag = False
         # Check if sounding data made it beyond 400mb (was successful ~1500 points)
         if len(data) >= 1500:
             # Plot the balloon data
-            plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile, missingDataFlag)
+            plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile)
             # Clean up the name and then save the html file in the directory
             removeFront = file.replace('edt_', '')
             cleanedName = removeFront.replace('.csv', '')
