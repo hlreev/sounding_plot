@@ -11,3 +11,25 @@
 [2024-01-01 14:05:07] [INFO] Your files have been successfully processed. They are now being plotted.
 [2024-01-01 14:06:06] [INFO] Your files have been successfully processed. They are now being plotted.
 [2024-01-01 14:09:11] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:15:48] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:16:08] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:16:42] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:17:27] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:17:59] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:18:40] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:34:44] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:38:51] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:40:42] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:42:52] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:44:22] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:44:23] [ERROR] Something unexpected has occurred. Code: cannot access local variable 'processedName' where it is not associated with a value
+[2024-01-01 14:45:27] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:45:28] [ERROR] Something unexpected has occurred. Code: 'NoneType' object has no attribute 'replace'
+[2024-01-01 14:48:16] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:49:07] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:50:29] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:53:06] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:53:38] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:55:39] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:56:25] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:58:39] [INFO] Your files have been successfully processed. They are now being plotted.

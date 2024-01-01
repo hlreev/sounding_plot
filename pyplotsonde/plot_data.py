@@ -113,9 +113,30 @@ def clean_up_name(file_name):
     Clean up the name for use in the title.
     """
 
-    remove_front = file_name.replace('edt_', '')
+    # Local import
+    import re
 
-    return remove_front.replace('.csv', '')
+    # Extract the time (4 digits before the file extension)
+    match = re.search(r'_(\d{4})\.', file_name)
+    if match:
+        original_time = match.group(1)
+        
+        # Hard-code specific cases: synoptic hours (does not account for DST, only standard lol)
+        converted_hour = {
+            '23': '00',
+            '05': '06',
+            '11': '12',
+            '17': '18'
+        }.get(original_time[:2], original_time[:2])
+
+        # Add 'z' to the converted hour
+        converted_time = f"{converted_hour}z"
+        
+        # Replace the original time with the converted one
+        file_name = file_name[:match.start(1)] + converted_time + file_name[match.end(1):]
+
+    # Remove 'edt_' and '.txt'
+    return file_name.replace('edt_', '').replace('.txt', '').replace('.csv', '')
 
 def check_missing_data(currentPoint, previousPoint):
     """
