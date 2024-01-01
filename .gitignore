@@ -6,7 +6,7 @@ level0/
 level1/
 viewer/
 soundings/
-clear_dir.py
+clean_dir.py
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
