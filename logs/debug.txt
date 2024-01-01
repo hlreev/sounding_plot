@@ -1,0 +1,13 @@
+[2023-11-28 18:31:01] [INFO] Your files have been successfully processed. They are now being plotted.
+[2023-12-16 05:52:02] [INFO] Your files have been successfully processed. They are now being plotted.
+[2023-12-16 05:53:06] [ERROR] No files were found. Please add the EDT files to the Level 0 directory. Code: [WinError 3] The system cannot find the path specified: 'data\\level0\\'
+[2023-12-16 05:55:44] [INFO] Your files have been successfully processed. They are now being plotted.
+[2023-12-16 05:55:44] [ERROR] No files were found. Please add the EDT files to the Level 0 directory. Code: [Errno 2] No such file or directory: 'data\\geojson\\FWD.geojson'
+[2023-12-16 05:57:04] [INFO] Your files have been successfully processed. They are now being plotted.
+[2023-12-16 05:57:05] [ERROR] No files were found. Please add the EDT files to the Level 0 directory. Code: [Errno 2] No such file or directory: 'data\\geojson\\FWD.geojson'
+[2023-12-16 05:58:04] [WARNING] The files have already been converted! Code: No conversion needed
+[2023-12-16 06:02:20] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:01:20] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:05:07] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:06:06] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-01 14:09:11] [INFO] Your files have been successfully processed. They are now being plotted.

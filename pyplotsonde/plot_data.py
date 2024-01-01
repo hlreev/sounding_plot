@@ -1,53 +1,90 @@
 '''
-Plots 2D data points of a weather balloon on an advanced map with streeview data
+Plot Data Module
 
-Repo: https://github.com/hlreev/sounding_plot
-
-Version History can be found in VERSIONS.md
+Plots 2D data points of a weather balloon on an advanced map with streetview data
 '''
 
-# Global imports
-import os
-import pandas as pd
+# Imports
 import matplotlib.pyplot as plt
-import numpy as np
-import base64
 import folium as fm
-from folium import IFrame
-from folium.plugins import FloatImage
-from progress.bar import IncrementalBar
 
-# Metadata
-__author__ = 'Hunter L Reeves'
-__license__ = 'GPL3'
-__maintainer__ = 'Hunter L Reeves, NWS Fort Worth'
-__email__ = 'hunter.reeves@noaa.gov'
-__status__ = 'In Production'
+# Modules
+from pyplotsonde.file_paths import LEVEL1_DIRECTORY, GEOJSON_PATH, SOUNDING_PATH, COMPASS_ROSE_PATH
 
-# Global Settings for plotted points
+# Global Settings
 _color = 'blue'
 _icon = 'glyphicon glyphicon-star'
 _iconcolor = 'white'
-# Styles for the Backup Offices
 _polyColor = {'fillColor': '#00ddff', 'color': '#adaaaa'}
-# For file management
-_csvPath = "data\\level1\\"
-_jsonPath = "data\\geojson\\"
-_soundingPath = "soundings\\"
-# Static image for a compass rose
-_compassRose = ("..\\images\\rose.png")
+
 # Location of Fort Worth's NWS Office
-_upperair = [32.83508, -97.29794]
 _fwd = [32.83488493770296, -97.29873660246302]
+_upperair = [32.83508, -97.29794]
+
 # Flag to check for missing data
 missingDataFlag = False
 
-# Plot the sounding
-def plotSkewT(temp, dewp, pres, cleanedName):
-    # Local import to access classes for plotting a skewT sounding
-    import SkewT
+def reset_flags(flags):
+    """
+    Helper Function
+
+    Reset flags for the next plot.
+    """
+
+    return {flag: False for flag in flags}
+
+def save_trajectory_html(sounding_plot, cleaned_name):
+    """
+    Helper Function
+
+    Save the folium map as an HTML file.
+    """
+
+    sounding_plot.save('viewer/' + cleaned_name + '.html')
+
+def add_sounding_marker(sounding_plot, current_sounding):
+    """
+    Helper Function
+
+    Add marker for SkewT sounding to the folium map.
+    """
+
+    # Imports
+    import base64
+    from folium import IFrame
+
+    encoded = base64.b64encode(open(current_sounding, 'rb').read())
+    html = '<img src="data:image/png;base64,{}">'.format
+    iframe = IFrame(html(encoded.decode('UTF-8')), width = 670, height = 650)
+    popup = fm.Popup(iframe, max_width = 800)
+    fm.Marker(location = _fwd, tooltip = "Click to show sounding.", popup = popup, icon = fm.Icon(color = 'gray')).add_to(sounding_plot)
+
+def save_skewt_sounding(cleaned_name):
+    """
+    Helper Function
+
+    Save the SkewT sounding as a PNG file.
+    """
+
+    current_sounding = SOUNDING_PATH + cleaned_name + '.png'
+    plt.savefig(current_sounding)
+    plt.close()
+
+    return current_sounding
+
+def plot_skewt(temp, dewp, pres, cleanedName):
+    """
+    Helper Function
+
+    Plot the SkewT sounding.
+    """
+        
+    # Imports
+    import numpy as np
+    from classes.SkewT import register_projection, SkewXAxes
+
     # Register the projection for the SkewT plot
-    SkewT.register_projection(SkewT.SkewXAxes)
+    register_projection(SkewXAxes)
     # Clean name further for use in title
     soundingName = cleanedName.replace('_', '/')
     # Create a new figure. The dimensions here give a good aspect ratio
@@ -69,13 +106,34 @@ def plotSkewT(temp, dewp, pres, cleanedName):
     ax.axvline(0, color = 'C0', ls = '--', lw = 1)
     ax.axvline(-20, color = 'C0', ls = '--', lw = 1)
 
-# Check for sections of missing data points (if difference is greater than 1, there is missing data!)
-def checkMissingData(currentPoint, previousPoint):
-    # Return - the absolute difference between the two point indexes in question
+def clean_up_name(file_name):
+    """
+    Helper Function
+
+    Clean up the name for use in the title.
+    """
+
+    remove_front = file_name.replace('edt_', '')
+
+    return remove_front.replace('.csv', '')
+
+def check_missing_data(currentPoint, previousPoint):
+    """
+    Helper Function
+
+    Checks for missing data by seeing if there was a previous point compared to the current point
+    """
+
     return abs((currentPoint) - (previousPoint))
 
 # Plots the first valid point for each mandatory level on the sounding
-def plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile):
+def plot_mandatory_points(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile):
+    """
+    Helper Function
+
+    Plot mandatory points on the sounding.
+    """
+
     # Plot the ascending balloon data points
     if _flags['925mb'] == False:
         # Sounding made it to 925mb
@@ -198,7 +256,7 @@ def plotMandatoryPoints(index, pressureList, locationList, info, point, previous
             ).add_to(sounding_plot)
             _flags['10mb'] = True
     # This checks the absolute difference between the current and previous point, if its greater than 1 - its missing data there!
-    if checkMissingData(point, previousPoint) != 1 and point != 9998: # Do not include the termination point
+    if check_missing_data(point, previousPoint) != 1 and point != 9998: # Do not include the termination point
         global missingDataFlag
         # Flag for missing data, only notify user once of missing data (ignore otherwise)
         if missingDataFlag == False:
@@ -213,151 +271,110 @@ def plotMandatoryPoints(index, pressureList, locationList, info, point, previous
         icon = fm.Icon(color = "red", icon_color = _iconcolor, icon = "glyphicon glyphicon-remove-circle")
         ).add_to(sounding_plot)
 
-# Takes in the parsed data and base map and then plots the parsed data onto the folium basemap
-def plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile):
-    # Get the size of the list of locations for index information
-    size = len(locationList)
-    # Cycle through the data and add the balloon data points to the folium map
-    for index in range(0, size):
-        # Points for keeping track of termination
-        point = pointsList[index]
-        # Check for initializing the previous point at the start (there is no point before 1...)
-        if point == 1:
-            # Set previous point to -1, otherwise it would be 9998...
-            previousPoint = 0
-        else:
-            # Previous points for keeping track of missing data
-            previousPoint = pointsList[index - 1]
-        # Information for each new data point in the plot
-        info = (str(pressureList[index]) + 'mb')
-        # Plot mandatory points on the sounding
-        plotMandatoryPoints(index, pressureList, locationList, info, point, previousPoint, sounding_plot, _flags, currentFile)
-    # Create the trajectory of the weather balloon
-    fm.PolyLine(
-        locationList, color = "grey", weight = "4").add_to(sounding_plot)
+def plot_trajectory(location_list, pressure_list, points_list, sounding_plot, flags, current_file):
+    """
+    Helper Functionc
 
-# Takes in base data and then parses the data in the pandas dataframe for plotting onto the basemap
-def parseData(data):
-    # Obtain and organize the data for the locations of balloon data 
+    Plot the balloon trajectory on the folium map.
+    """
+
+    size = len(location_list)
+    for index in range(0, size):
+        point = points_list[index]
+        if point == 1:
+            previous_point = 0
+        else:
+            previous_point = points_list[index - 1]
+        info = str(pressure_list[index]) + 'mb'
+        plot_mandatory_points(index, pressure_list, location_list, info, point, previous_point, sounding_plot, flags, current_file)
+
+    fm.PolyLine(location_list, color = "grey", weight = "4").add_to(sounding_plot)
+
+def parse_data(data):
+    """
+    Helper Function
+
+    Parse data into required format for plotting.
+    """
+
     locations = data[['Lat', 'Lon']]
-    locationList = locations.values.tolist() # Use for locations
+    location_list = locations.values.tolist()
     pressures = data['P']
-    pressureList = pressures.values.tolist() # Use for pressure heights
-    points = data['n'] 
-    pointsList = points.values.tolist() # Use for data point count
-    # Obtain the temperatures and dewpoints
+    pressure_list = pressures.values.tolist()
+    points = data['n']
+    points_list = points.values.tolist()
     temp = data['Temp']
     dewp = data['Dewp']
-    # Obtain the pressures (reverse the order)
     pres = data['P']
-    # Return: parsed data
-    return locationList, pressureList, pointsList, temp, dewp, pres
 
-# Creates a basemap with folium and some starting points for the FWD office and upper-air building
-def createBasemap():
+    return location_list, pressure_list, points_list, temp, dewp, pres
+
+def create_basemap():
+    """
+    Helper Function
+
+    Create the base map using folium.
+    """
+
+    # Imports
+    from folium.plugins import FloatImage
+
     # Create the base map
     sounding_plot = fm.Map(location = _fwd,  zoom_start = 15, control_scale = True, tiles = None)
     # Adds the county polygons for the FWD CWA from a geojson file
-    fm.GeoJson(_jsonPath + 'FWD.geojson', name = 'Fort Worth CWA').add_to(sounding_plot)
+    fm.GeoJson(GEOJSON_PATH + 'FWD.geojson', name = 'Fort Worth CWA').add_to(sounding_plot)
     # Add the backup office polygon CWAs from geojson files
-    fm.GeoJson(_jsonPath + 'SHV.geojson', name = 'Shreveport CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
-    fm.GeoJson(_jsonPath + 'OUN.geojson', name = 'Norman CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
-    fm.GeoJson(_jsonPath + 'OHX.geojson', name = 'Nashville CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
+    fm.GeoJson(GEOJSON_PATH + 'SHV.geojson', name = 'Shreveport CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
+    fm.GeoJson(GEOJSON_PATH + 'OUN.geojson', name = 'Norman CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
+    fm.GeoJson(GEOJSON_PATH + 'OHX.geojson', name = 'Nashville CWA', show = False, style_function = lambda x:_polyColor).add_to(sounding_plot)
     # Add some additional map layers
     fm.TileLayer('openstreetmap', name = "OpenStreetMap").add_to(sounding_plot)
     fm.TileLayer('cartodbpositron', name = "CartoDB Positron").add_to(sounding_plot)
-    fm.TileLayer('stamentoner', name = "Stamen Toner").add_to(sounding_plot)
-    fm.TileLayer('stamenwatercolor', name = "Stamen Watercolor").add_to(sounding_plot)
     # Add a static rose compass to the bottom right of the plotted map
-    FloatImage(_compassRose, bottom = 2, left = 89).add_to(sounding_plot)
+    FloatImage(COMPASS_ROSE_PATH, bottom = 2, left = 89).add_to(sounding_plot)
     # Add the tile layer control
     fm.LayerControl().add_to(sounding_plot)
     # Adds the release point for the balloon and location of FWD office (upper air building)
     _location = "Latitude: " + str(_upperair[0]) + ", Longitude: " + str(_upperair[1])
     fm.Marker(_upperair, popup = _location, tooltip = "FWD Upper Air", icon = fm.Icon(color = "darkblue", icon_color = "white", icon = "glyphicon glyphicon-home")).add_to(sounding_plot)
-    # Return: basemap
+
     return sounding_plot
 
-# Takes in level1 *.csv data and reads it into a pandas dataframe
-def readData(currentFile):
-    # Data for reading files in the level1 directory
-    fileName = _csvPath + currentFile
-    # Open the csv file and return the data for plotting
-    data = pd.read_csv(fileName)
-    # Return: base data
-    return data, currentFile
+def read_data(current_file):
+    """
+    Helper Function
 
-# Generate each sounding plot
-def generatePlots(files, _flags, progressBar):
-    # Go through each *.csv file and plot the data on a new html page
-    for currentFile in files:
-        # Function calls for the program to function
-        data, file = readData(currentFile)
-        sounding_plot = createBasemap()
-        locationList, pressureList, pointsList, temp, dewp, pres = parseData(data)
-        # Check if sounding data made it beyond 400mb (was successful ~1500 points)
+    Read *.csv file and return data.
+    """
+
+    # Imports
+    import pandas as pd
+
+    file_path = LEVEL1_DIRECTORY + current_file
+    data = pd.read_csv(file_path)
+
+    return data, current_file
+
+def generate_plots(files, flags, progress_bar):
+    """
+    Helper Function
+
+    Generate plots for each *.csv file.
+    """
+
+    for current_file in files:
+        data, file_name = read_data(current_file)
+        sounding_plot = create_basemap()
+        location_list, pressure_list, points_list, temp, dewp, pres = parse_data(data)
+
         if len(data) >= 1500:
-            # Plot the balloon data
-            plotTrajectory(locationList, pressureList, pointsList, sounding_plot, _flags, currentFile)
-            # Clean up the name and then save the html file in the directory
-            removeFront = file.replace('edt_', '')
-            cleanedName = removeFront.replace('.csv', '')
-            # Plot the SkewT sounding and save in /soundings/ directory
-            plotSkewT(temp, dewp, pres, cleanedName)
-            # Save the SkewT sounding then close it
-            currentSounding = _soundingPath + cleanedName + '.png'
-            plt.savefig(currentSounding)
-            plt.close()
-            # Encode the sounding images and then add them to the plot for viewing from a marker
-            encoded = base64.b64encode(open(currentSounding, 'rb').read())
-            html = '<img src="data:image/png;base64,{}">'.format
-            iframe = IFrame(html(encoded.decode('UTF-8')), width = 670, height = 650)
-            popup = fm.Popup(iframe, max_width = 800)
-            fm.Marker(location = _fwd, tooltip = "Click to show sounding.", popup = popup, icon = fm.Icon(color = 'gray')).add_to(sounding_plot)
-            # Save each balloon trajectory
-            sounding_plot.save('viewer/' + cleanedName + '.html')
-            # Continue the progress bar to the next state in the terminal console after each file is processed
-            progressBar.next()
-            # Reset flags to plot the mandatory levels for the next plot
-            _flags = {flag: False for flag in _flags}
-        # Not enough data for successful release!
+            plot_trajectory(location_list, pressure_list, points_list, sounding_plot, flags, current_file)
+            cleaned_name = clean_up_name(file_name)
+            plot_skewt(temp, dewp, pres, cleaned_name)
+            current_sounding = save_skewt_sounding(cleaned_name)
+            add_sounding_marker(sounding_plot, current_sounding)
+            save_trajectory_html(sounding_plot, cleaned_name)
+            progress_bar.next()
+            flags = reset_flags(flags)
         else:
-            print('\nERROR: The radiosonde data in \'' + currentFile + '\' was not successful to 400mb. The data will not be plotted.')
-
-# Looks through the level1 files to obtain the filename and the count
-def findFiles():
-    # List of files that need to be read in
-    filenames = []
-    # Iterate over all the files in the directory, store into list
-    for name in os.listdir(_csvPath):
-        # Add the file and increment the counter
-        filenames.append(name)
-    # Return: read files that need to be processed and the size of the files read in
-    return filenames
-            
-# Bulk of code is ran here
-def main():
-    # Flags to check if pressure level has been reached
-    _flags = { '925mb': False, '850mb': False, '700mb': False, '500mb': False, '400mb': False, 
-               '300mb': False, '250mb': False, '200mb': False, '150mb': False, '100mb': False,
-                '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False }
-    # Obtain the file names for use later when saving the plots
-    files = findFiles()
-    # Message to indicate the start
-    print('\nPlotting trajectories and skew-T soundings...\n')
-    # Initializes incremental progress bar with the max size of the file length data
-    progressBar = IncrementalBar('Plotting', max = len(files), suffix='%(index)d/%(max)d files [%(elapsed_td)s / %(eta_td)s]')
-    # Generate each soudning plot - bulk of the code is executed here
-    generatePlots(files, _flags, progressBar)
-    # Check if there are files in the level1 directory
-    if len(files) != 0:
-        # Progress bar is finished!
-        progressBar.finish()
-        # Print the message for debugging at the end of the program running
-        print("\nThe trajectories and soundings have been plotted. They can be viewed in the browser from './viewer/YYYYMMDD_HHmm.html'.")
-    else:
-        # No files found!
-        print('\nERROR: No files were found in the /level1/ directory.')
-
-# Run the program
-main()
+            print(f'\nERROR: The radiosonde data in \'{current_file}\' was not successful to 400mb. The data will not be plotted.')

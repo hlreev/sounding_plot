@@ -1,6 +1,12 @@
 # Sounding Plot Viewer Patches and Updates
 All versions of Sounding Plot Viewer will be documented here, along with the changelog and bug fixes
 
+## Version 1.1.0 (Date Finished - ??/??/????)
+- Refactored code into modules to make it more reusable/modular
+- Removed the Stamen series basemaps (deprecated?)
+- Added some debugging support for future ease of use
+- Minor changes and tweaks
+
 ## Version 1.0.1 (Date Finished - 08/06/2023)
 - Edited the text for some of the console output to make more sense
 - Tweaked/updated gitignore
