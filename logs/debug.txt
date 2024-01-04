@@ -1,35 +1,106 @@
-[2023-11-28 18:31:01] [INFO] Your files have been successfully processed. They are now being plotted.
-[2023-12-16 05:52:02] [INFO] Your files have been successfully processed. They are now being plotted.
-[2023-12-16 05:53:06] [ERROR] No files were found. Please add the EDT files to the Level 0 directory. Code: [WinError 3] The system cannot find the path specified: 'data\\level0\\'
-[2023-12-16 05:55:44] [INFO] Your files have been successfully processed. They are now being plotted.
-[2023-12-16 05:55:44] [ERROR] No files were found. Please add the EDT files to the Level 0 directory. Code: [Errno 2] No such file or directory: 'data\\geojson\\FWD.geojson'
-[2023-12-16 05:57:04] [INFO] Your files have been successfully processed. They are now being plotted.
-[2023-12-16 05:57:05] [ERROR] No files were found. Please add the EDT files to the Level 0 directory. Code: [Errno 2] No such file or directory: 'data\\geojson\\FWD.geojson'
-[2023-12-16 05:58:04] [WARNING] The files have already been converted! Code: No conversion needed
-[2023-12-16 06:02:20] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:01:20] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:05:07] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:06:06] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:09:11] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:15:48] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:16:08] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:16:42] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:17:27] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:17:59] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:18:40] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:34:44] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:38:51] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:40:42] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:42:52] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:44:22] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:44:23] [ERROR] Something unexpected has occurred. Code: cannot access local variable 'processedName' where it is not associated with a value
-[2024-01-01 14:45:27] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:45:28] [ERROR] Something unexpected has occurred. Code: 'NoneType' object has no attribute 'replace'
-[2024-01-01 14:48:16] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:49:07] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:50:29] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:53:06] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:53:38] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:55:39] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:56:25] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-01 14:58:39] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 16:08:24] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 16:08:25] [ERROR] Something unexpected has occurred. Message: invalid index to scalar variable.
+[2024-01-02 16:24:49] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 16:26:26] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 16:26:45] [WARNING] The files have already been converted! Message: No conversion needed
+[2024-01-02 16:27:58] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 16:29:04] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 16:30:22] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 16:32:56] [INFO] Files have been successfully deleted from all directories.
+[2024-01-02 16:34:34] [INFO] Files have been successfully deleted from all directories.
+[2024-01-02 16:34:44] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 16:57:58] [INFO] Files have been successfully deleted from all directories.
+[2024-01-02 17:05:30] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 17:05:46] [INFO] Files have been successfully deleted from all directories.
+[2024-01-02 17:05:49] [INFO] Files have been successfully deleted from all directories.
+[2024-01-02 17:26:26] [INFO] Files have been successfully deleted from all directories.
+[2024-01-02 17:26:30] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 17:27:08] [INFO] Files have been successfully deleted from all directories.
+[2024-01-02 17:27:34] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 17:29:09] [INFO] Files have been successfully deleted from all directories.
+[2024-01-02 17:29:14] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 17:40:18] [INFO] Files have been successfully deleted from all directories.
+[2024-01-02 17:40:23] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 17:53:20] [INFO] Files have been successfully deleted from all directories.
+[2024-01-02 17:53:51] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-02 17:54:28] [ERROR] Something unexpected has occurred. Message: x and y must have same first dimension, but have shapes (1,) and (6662,)
+[2024-01-03 11:25:00] [WARNING] The files have already been converted! Message: No conversion needed
+[2024-01-03 11:25:14] [INFO] Files have been successfully deleted from all directories.
+[2024-01-03 11:25:32] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-03 11:26:14] [ERROR] Something unexpected has occurred. Message: x and y must have same first dimension, but have shapes (1,) and (6662,)
+[2024-01-03 15:23:56] [INFO] Files have been successfully deleted from all directories.
+[2024-01-03 15:24:07] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-03 15:24:47] [INFO] Files have been successfully deleted from all directories.
+[2024-01-03 15:25:00] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-03 15:27:33] [INFO] Files have been successfully deleted from all directories.
+[2024-01-03 15:27:46] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 08:43:09] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 08:46:37] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 08:46:55] [ERROR] Something unexpected has occurred. Message: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+[2024-01-04 08:48:48] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 08:49:05] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 08:50:09] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 08:50:29] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 08:51:39] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 08:52:09] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 08:54:27] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 08:54:55] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 08:57:26] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 09:19:10] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 09:21:30] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 09:21:47] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 09:22:47] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 09:22:58] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 09:24:46] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 09:25:25] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 09:28:24] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 09:28:36] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 09:29:13] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 09:29:27] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 09:33:59] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 09:34:21] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 09:50:36] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 09:50:56] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 10:05:35] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 10:05:47] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 10:13:28] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 10:13:38] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 10:18:33] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 10:18:41] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 10:22:46] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 10:22:57] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 10:27:12] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 10:28:00] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 10:37:05] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 10:37:17] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 10:43:42] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 10:43:55] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 10:45:23] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 10:45:28] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 10:46:55] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 10:47:07] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 10:47:37] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 10:47:43] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 10:47:56] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 11:04:07] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:04:24] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 11:05:41] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:05:55] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 11:08:05] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:08:31] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 11:10:03] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:10:16] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 11:11:05] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:11:18] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 11:12:35] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:12:50] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 11:35:53] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:36:09] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 11:42:20] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:54:31] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:54:42] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-04 11:54:56] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:55:05] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:55:08] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:55:18] [INFO] Files have been successfully deleted from all directories.
+[2024-01-04 11:55:51] [INFO] Your files have been successfully processed. They are now being plotted.

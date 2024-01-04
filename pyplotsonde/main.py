@@ -49,7 +49,7 @@ def plot_data():
         # Progress bar is finished!
         progressBar.finish()
         # Print the message for debugging at the end of the program running
-        print("\nThe trajectories and soundings have been plotted. They can be viewed in the browser from './viewer/YYYYMMDD_HHmm.html'.")
+        print("\nThe trajectories and soundings have been plotted. They can be viewed in the browser from './viewer/YYYYMMDD_HHz.html'.")
     else:
         # No files found!
         print('\nERROR: No files were found in the /level1/ directory.')
@@ -83,8 +83,8 @@ def main():
         process_data()
         plot_data()
     except FileNotFoundError as error:
-        debug(f"No files were found. Please add the EDT files to the Level 0 directory. Code: {error}", "ERROR")
+        debug(f"No files were found. Please add the EDT files to the Level 0 directory. Message: {error}", "ERROR")
     except FilesAlreadyConvertedError as error:
-        debug(f"The files have already been converted! Code: {error}", "WARNING")
+        debug(f"The files have already been converted! Message: {error}", "WARNING")
     except Exception as error:
-        debug(f"Something unexpected has occurred. Code: {error}", "ERROR")
+        debug(f"Something unexpected has occurred. Message: {error}", "ERROR")

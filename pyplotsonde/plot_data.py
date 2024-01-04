@@ -18,7 +18,7 @@ _iconcolor = 'white'
 _polyColor = {'fillColor': '#00ddff', 'color': '#adaaaa'}
 
 # Location of Fort Worth's NWS Office
-_fwd = [32.83488493770296, -97.29873660246302]
+_fwd = [32.83488, -97.29873]
 _upperair = [32.83508, -97.29794]
 
 # Flag to check for missing data
@@ -72,6 +72,36 @@ def save_skewt_sounding(cleaned_name):
 
     return current_sounding
 
+def testing(temp, dewp, pres):
+    """
+    Helper Function
+
+    Testing
+    """
+
+    # Local import
+    import numpy as np
+
+    # Constants
+    Rd = 287.05 # Specific heat at constant pressure (J/(kg*K))
+    cPd = 1005 # Specific gas constant for dry air (J/(kg·K))
+    dalr = 9.8 / 1000 # Dry adiabatic lapse rate (K/m)
+    malr = 6.5 / 1000 # Moist adiabatic lapse rate (K/m)
+    adj_bias = 1.33 # Correct for temperature of LCL error
+
+    # Surface observations (converted to from degreeC to K)
+    sfc_pressure = pres[0]
+    sfc_temp = temp[0] + 273.15
+    sfc_dewp = dewp[0] + 273.15
+
+    # Estimate the LCL temperature (temperature at height of LCL)
+    t_LCL = (sfc_dewp - ((0.001296 * sfc_dewp) + 0.1963) * (sfc_temp - sfc_dewp)) + adj_bias
+
+    # Estimate the pressure at the LCL using the provided equation
+    p_LCL = sfc_pressure * (t_LCL / sfc_temp) ** (cPd / Rd)
+
+    return p_LCL
+
 def plot_skewt(temp, dewp, pres, cleanedName):
     """
     Helper Function
@@ -93,9 +123,14 @@ def plot_skewt(temp, dewp, pres, cleanedName):
     # Add the grid and title
     plt.grid(True, ls = '--')
     plt.title(' FWD ' + soundingName + ' (Observed)', fontsize = 14, loc = 'left')
+
+    # TESTING
+    p_LCL = testing(temp, dewp, pres)
+
     # Plot data using the log-p axes
     ax.semilogy(temp, pres, color = 'C3', lw = 2)
     ax.semilogy(dewp, pres, color = 'C2', lw = 2)
+    ax.axhline(p_LCL, color = 'black', ls = '--', lw = 1)
     # Disables the log-formatting that comes with semilogy
     ax.yaxis.set_major_formatter(plt.ScalarFormatter())
     ax.set_yticks(np.linspace(100, 1000, 10))
