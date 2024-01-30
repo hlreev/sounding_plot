@@ -7,8 +7,10 @@ Plots 2D data points of a weather balloon on an advanced map with streetview dat
 # Imports
 import matplotlib.pyplot as plt
 import folium as fm
+import numpy as np
 
 # Modules
+from pyplotsonde.thermo import plot_parcel_trace
 from pyplotsonde.file_paths import LEVEL1_DIRECTORY, GEOJSON_PATH, SOUNDING_PATH, COMPASS_ROSE_PATH
 
 # Global Settings
@@ -72,37 +74,7 @@ def save_skewt_sounding(cleaned_name):
 
     return current_sounding
 
-def testing(temp, dewp, pres):
-    """
-    Helper Function
-
-    Testing
-    """
-
-    # Local import
-    import numpy as np
-
-    # Constants
-    Rd = 287.05 # Specific heat at constant pressure (J/(kg*K))
-    cPd = 1005 # Specific gas constant for dry air (J/(kg·K))
-    dalr = 9.8 / 1000 # Dry adiabatic lapse rate (K/m)
-    malr = 6.5 / 1000 # Moist adiabatic lapse rate (K/m)
-    adj_bias = 1.33 # Correct for temperature of LCL error
-
-    # Surface observations (converted to from degreeC to K)
-    sfc_pressure = pres[0]
-    sfc_temp = temp[0] + 273.15
-    sfc_dewp = dewp[0] + 273.15
-
-    # Estimate the LCL temperature (temperature at height of LCL)
-    t_LCL = (sfc_dewp - ((0.001296 * sfc_dewp) + 0.1963) * (sfc_temp - sfc_dewp)) + adj_bias
-
-    # Estimate the pressure at the LCL using the provided equation
-    p_LCL = sfc_pressure * (t_LCL / sfc_temp) ** (cPd / Rd)
-
-    return p_LCL
-
-def plot_skewt(temp, dewp, pres, cleanedName):
+def plot_skewt(temp_C, dewp_C, pres, cleanedName):
     """
     Helper Function
 
@@ -110,7 +82,6 @@ def plot_skewt(temp, dewp, pres, cleanedName):
     """
         
     # Imports
-    import numpy as np
     from classes.SkewT import register_projection, SkewXAxes
 
     # Register the projection for the SkewT plot
@@ -123,14 +94,12 @@ def plot_skewt(temp, dewp, pres, cleanedName):
     # Add the grid and title
     plt.grid(True, ls = '--')
     plt.title(' FWD ' + soundingName + ' (Observed)', fontsize = 14, loc = 'left')
-
-    # TESTING
-    p_LCL = testing(temp, dewp, pres)
-
+    # Plot parcel trace and LCL
+    parcel_trace = plot_parcel_trace(temp_C, dewp_C, pres)
     # Plot data using the log-p axes
-    ax.semilogy(temp, pres, color = 'C3', lw = 2)
-    ax.semilogy(dewp, pres, color = 'C2', lw = 2)
-    ax.axhline(p_LCL, color = 'black', ls = '--', lw = 1)
+    ax.semilogy(temp_C, pres, color = 'red', lw = 2)
+    ax.semilogy(dewp_C, pres, color = 'green', lw = 2)
+    ax.plot([entry['temperature'] for entry in parcel_trace], [entry['pressure'] for entry in parcel_trace], color = "brown", ls = '--', lw = 2)
     # Disables the log-formatting that comes with semilogy
     ax.yaxis.set_major_formatter(plt.ScalarFormatter())
     ax.set_yticks(np.linspace(100, 1000, 10))
@@ -158,14 +127,34 @@ def clean_up_name(file_name):
         
         # Hard-code specific cases: synoptic hours (does not account for DST, only standard lol)
         converted_hour = {
-            '23': '00',
-            '05': '06',
-            '11': '12',
-            '17': '18'
+            '23': '0000',
+            '00': '0100',
+            '01': '0200',
+            '02': '0300',
+            '03': '0400',
+            '04': '0500',
+            '05': '0600',
+            '06': '0700',
+            '07': '0800',
+            '08': '0900',
+            '09': '1000',
+            '10': '1100',
+            '11': '1200',
+            '12': '1300',
+            '13': '1400',
+            '14': '1500',
+            '15': '1600',
+            '16': '1700',
+            '17': '1800',
+            '18': '1900',
+            '19': '2000',
+            '20': '2100',
+            '21': '2200',
+            '22': '2300'
         }.get(original_time[:2], original_time[:2])
 
         # Add 'z' to the converted hour
-        converted_time = f"{converted_hour}z"
+        converted_time = f"{converted_hour}"
         
         # Replace the original time with the converted one
         file_name = file_name[:match.start(1)] + converted_time + file_name[match.end(1):]
@@ -359,11 +348,11 @@ def parse_data(data):
     pressure_list = pressures.values.tolist()
     points = data['n']
     points_list = points.values.tolist()
-    temp = data['Temp']
-    dewp = data['Dewp']
+    temp_C = data['Temp']
+    dewp_C = data['Dewp']
     pres = data['P']
 
-    return location_list, pressure_list, points_list, temp, dewp, pres
+    return location_list, pressure_list, points_list, temp_C, dewp_C, pres
 
 def create_basemap():
     """
@@ -421,12 +410,12 @@ def generate_plots(files, flags, progress_bar):
     for current_file in files:
         data, file_name = read_data(current_file)
         sounding_plot = create_basemap()
-        location_list, pressure_list, points_list, temp, dewp, pres = parse_data(data)
+        location_list, pressure_list, points_list, temp_C, dewp_C, pres = parse_data(data)
 
         if len(data) >= 1500:
             plot_trajectory(location_list, pressure_list, points_list, sounding_plot, flags, current_file)
             cleaned_name = clean_up_name(file_name)
-            plot_skewt(temp, dewp, pres, cleaned_name)
+            plot_skewt(temp_C, dewp_C, pres, cleaned_name)
             current_sounding = save_skewt_sounding(cleaned_name)
             add_sounding_marker(sounding_plot, current_sounding)
             save_trajectory_html(sounding_plot, cleaned_name)

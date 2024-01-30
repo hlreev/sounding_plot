@@ -1,10 +1,12 @@
 # Sounding Plot Viewer Patches and Updates
 All versions of Sounding Plot Viewer will be documented here, along with the changelog and bug fixes
 
-## Version 1.1.0 (Date Finished - ??/??/????)
+## Version 1.1.0 (Date Finished - 01/30/2024)
 - Refactored code into modules to make it more reusable/modular
 - Removed the Stamen series basemaps (deprecated?)
 - Added some debugging support for future ease of use
+- Adjusted how soundings are plotted
+- Now plots a surface-based parcel trace by default for each sounding
 - Minor changes and tweaks
 
 ## Version 1.0.1 (Date Finished - 08/06/2023)
