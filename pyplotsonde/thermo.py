@@ -54,10 +54,8 @@ def plot_parcel_trace(temp_C, dewp_C, pres):
     # Initialize data for parcel trace
     parcel_data = []
     lapse_rates = []
-    resolution = 1 # Data resolution in meters
+    resolution = 100 # Data resolution in meters
     parcel_temp_K = virtual_temp_K
-
-    index = 0
 
     # Adiabatically lift the parcel
     for alt_value in range(int(sfc_height), 16000, resolution):
@@ -81,8 +79,6 @@ def plot_parcel_trace(temp_C, dewp_C, pres):
 
         # Cool the parcel as it rises
         parcel_temp_K -= lapse_rate * resolution  # Adjust lapse rate for 
-        
-        index += 1
 
     return parcel_data
 

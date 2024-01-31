@@ -11,6 +11,7 @@ import numpy as np
 
 # Modules
 from pyplotsonde.thermo import plot_parcel_trace
+from pyplotsonde.logger import debug
 from pyplotsonde.file_paths import LEVEL1_DIRECTORY, GEOJSON_PATH, SOUNDING_PATH, COMPASS_ROSE_PATH
 
 # Global Settings
@@ -102,7 +103,9 @@ def plot_skewt(temp_C, dewp_C, pres, cleanedName):
     ax.plot([entry['temperature'] for entry in parcel_trace], [entry['pressure'] for entry in parcel_trace], color = "brown", ls = '--', lw = 2)
     # Disables the log-formatting that comes with semilogy
     ax.yaxis.set_major_formatter(plt.ScalarFormatter())
-    ax.set_yticks(np.linspace(100, 1000, 10))
+    # Set tick marks for the sounding at each mandatory level
+    mandatory_levels = [1000, 850, 700, 500, 300, 200, 100]
+    ax.set_yticks(mandatory_levels)
     ax.set_ylim(1050, 100)
     ax.xaxis.set_major_locator(plt.MultipleLocator(10))
     ax.set_xlim(-50, 50)
@@ -306,7 +309,7 @@ def plot_mandatory_points(index, pressureList, locationList, info, point, previo
         # Flag for missing data, only notify user once of missing data (ignore otherwise)
         if missingDataFlag == False:
             # Message to console
-            print('\nWARNING: Missing data found in \'' + currentFile + '\'')
+            debug('Missing data found in \'' + currentFile + '\'', "WARNING")
             # Trip the missing data flag
             missingDataFlag = True
     elif point == 9998:
@@ -422,4 +425,4 @@ def generate_plots(files, flags, progress_bar):
             progress_bar.next()
             flags = reset_flags(flags)
         else:
-            print(f'\nERROR: The radiosonde data in \'{current_file}\' was not successful to 400mb. The data will not be plotted.')
+            debug(f'The radiosonde data in \'{current_file}\' was not successful to 400mb. The data will not be plotted.', "ERROR")

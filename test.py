@@ -20,7 +20,13 @@ def interpolate_lapse_rate(alt, malr, dalr, transition_alt, transition_range):
     Interpolate lapse rate between MALR and DALR based on altitude
     """
 
-    return np.where(alt <= transition_alt, malr, malr - ((malr - dalr) / transition_range) * (alt - transition_alt))
+    # Determine if altitude has been reached to transition away from the MALR
+    if alt <= transition_alt:
+        lapse_rate = malr
+    else:
+        lapse_rate = malr - ((malr - dalr) / transition_range) * (alt - transition_alt) # Gradually move to DALR as you ascend
+
+    return lapse_rate
 
 def moist_adiabatic_lapse_rate(temp_C, dewp_C, pressure_hPa, mixing_ratio):
     """
@@ -30,15 +36,6 @@ def moist_adiabatic_lapse_rate(temp_C, dewp_C, pressure_hPa, mixing_ratio):
     """
 
     return ((CPD + (CPV * mixing_ratio)) / ((1 + (CPV / CPD) * mixing_ratio) * virtual_temp(temp_C, dewp_C, pressure_hPa))) / 1000
-
-def potential_temp(temp_K, pressure_hPa):
-    """
-    Helper Function
-
-    Calculate potential temperature
-    """
-    
-    return temp_K * (1000 / pressure_hPa) ** (RD / CPD)
 
 def virtual_temp(temp_C, dewp_C, pressure_hPa):
     """
@@ -84,7 +81,6 @@ e_s = 6.11 * 10**((7.5 * sfc_temp_C) / (237.7 + sfc_temp_C))
 mixing_ratio = 621.97 * (e_s / (sfc_pres_hPa - e_s))
 
 # Testing different temperature values here
-potential_temp_K = potential_temp(sfc_temp_K, sfc_pres_hPa)
 virtual_temp_K = virtual_temp(sfc_temp_C, sfc_dewp_C, sfc_pres_hPa)
 
 # Start parcel temp for the parcel trace
@@ -107,10 +103,16 @@ for alt_value in range(int(sfc_height), 16000, resolution):
         'pressure': pressure_at_altitude(alt_value)
     })
 
+    print(malr)
+
     lapse_rate = interpolate_lapse_rate(alt_value, malr, dalr, transition_alt, transition_range)
+
+    # Ensure that the lapse rate doesn't exceed the DALR
+    lapse_rate = min(lapse_rate, dalr)
 
     # Print the parcel temperature for each iteration
     print(f'Parcel Temperature at {alt_value} meters: {round(parcel_temp_K - 273.15, 0)}°C')
+    print(f'Instantaneous Lapse Rate at {alt_value} meters: {lapse_rate}')
 
     # Cool the parcel as it rises
     if alt_value <= z_LCL:

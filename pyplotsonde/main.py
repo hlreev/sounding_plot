@@ -50,10 +50,10 @@ def plot_data():
         progressBar.finish()
         # Print the message for debugging at the end of the program running
         print("\nThe trajectories and soundings have been plotted. They can be viewed in the browser from './viewer/YYYYMMDD_HHz.html'.")
-        debug("Success! All plots and soundings have been generated.", "INFO")
+        debug("The plots and soundings for all successful releases have been generated.", "INFO")
     else:
         # No files found!
-        print('\nERROR: No files were found in the /level1/ directory.')
+        debug('No files were found in the directory.', "ERROR")
 
     return
 

@@ -1,17 +1,6 @@
-[2024-01-30 09:10:46] [INFO] Files have been successfully deleted from all directories.
-[2024-01-30 09:10:55] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-30 09:10:56] [ERROR] Something unexpected has occurred. Message: 6000
-[2024-01-30 09:12:00] [INFO] Files have been successfully deleted from all directories.
-[2024-01-30 09:12:19] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-30 09:15:18] [INFO] Files have been successfully deleted from all directories.
-[2024-01-30 09:15:21] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-30 09:15:22] [INFO] Success! All plots and soundings have been generated.
-[2024-01-30 09:45:12] [INFO] Files have been successfully deleted from all directories.
-[2024-01-30 09:46:10] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-30 09:46:33] [INFO] Success! All plots and soundings have been generated.
-[2024-01-30 11:49:51] [INFO] Files have been successfully deleted from all directories.
-[2024-01-30 11:50:29] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-30 11:51:11] [INFO] Success! All plots and soundings have been generated.
-[2024-01-30 11:53:42] [INFO] Files have been successfully deleted from all directories.
-[2024-01-30 11:53:51] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-01-30 11:54:36] [INFO] Success! All plots and soundings have been generated.
+[2024-01-31 07:28:13] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-01-31 07:28:16] [ERROR] The radiosonde data in 'edt_20230302_1055.csv' was not successful to 400mb. The data will not be plotted.
+[2024-01-31 07:28:42] [ERROR] The radiosonde data in 'edt_20230321_1054.csv' was not successful to 400mb. The data will not be plotted.
+[2024-01-31 07:28:52] [ERROR] The radiosonde data in 'edt_20230327_2303.csv' was not successful to 400mb. The data will not be plotted.
+[2024-01-31 07:28:52] [WARNING] Missing data found in 'edt_20230327_2359.csv'
+[2024-01-31 07:28:59] [INFO] The plots and soundings for all successful releases have been generated.
