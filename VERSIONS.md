@@ -1,6 +1,11 @@
 # Sounding Plot Viewer Patches and Updates
 All versions of Sounding Plot Viewer will be documented here, along with the changelog and bug fixes
 
+## Version 1.1.1 (Date Finished - ??/??/????)
+- Adjusted how the moist adiabatic lapse rate is calculated for the parcel trace
+- Changed the y-axis tick marks on the sounding to match the SPC sounding page
+- Minor changes and tweaks
+
 ## Version 1.1.0 (Date Finished - 01/30/2024)
 - Refactored code into modules to make it more reusable/modular
 - Removed the Stamen series basemaps (deprecated?)

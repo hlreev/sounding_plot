@@ -41,9 +41,6 @@ def plot_parcel_trace(temp_C, dewp_C, pres):
     # Testing different temperature values here
     virtual_temp_K = virtual_temp(sfc_temp_C, sfc_dewp_C, sfc_pres_hPa)
 
-    # Calculate the actual MALR using the parcel temperature and mixing ratio
-    malr = moist_adiabatic_lapse_rate(sfc_temp_C, sfc_dewp_C, sfc_pres_hPa, mixing_ratio)
-
     # Estimate the LCL properties
     z_LCL = ((sfc_temp_C - sfc_dewp_C) / 10) * 1247 + sfc_height
 
@@ -56,12 +53,14 @@ def plot_parcel_trace(temp_C, dewp_C, pres):
     lapse_rates = []
     resolution = 100 # Data resolution in meters
     parcel_temp_K = virtual_temp_K
+    parcel_temp_C = parcel_temp_K - 273.15
+    malr = None
 
     # Adiabatically lift the parcel
     for alt_value in range(int(sfc_height), 16000, resolution):
         # Add the data of the parcel to the list of dictionaries
         parcel_data.append({
-            'temperature': parcel_temp_K - 273.15,
+            'temperature': parcel_temp_C,
             'height': alt_value,
             'pressure': pressure_at_altitude(alt_value)
         })
@@ -71,14 +70,18 @@ def plot_parcel_trace(temp_C, dewp_C, pres):
             # Use DALE
             lapse_rate = dalr 
         else:
-            lapse_rate = interpolate_lapse_rate(alt_value, malr, dalr, transition_alt, transition_range)
+            if malr == None:
+                # Calculate the actual MALR using the parcel temperature and mixing ratio at the LCL
+                malr = moist_adiabatic_lapse_rate(parcel_temp_C, parcel_temp_C, sfc_pres_hPa, mixing_ratio)
+            else:
+                lapse_rate = interpolate_lapse_rate(alt_value, malr, dalr, transition_alt, transition_range)
 
         # Ensure that the lapse rate doesn't exceed the DALR
         lapse_rate = min(lapse_rate, dalr)
         lapse_rates.append(lapse_rate)
 
         # Cool the parcel as it rises
-        parcel_temp_K -= lapse_rate * resolution  # Adjust lapse rate for 
+        parcel_temp_C -= lapse_rate * resolution  # Adjust lapse rate for 
 
     return parcel_data
 
