@@ -24,12 +24,11 @@ __license__ = 'GPL3'
 __maintainer__ = 'Hunter Reeves, NWS Fort Worth'
 __email__ = 'hunter.reeves@noaa.gov'
 __status__ = 'In Production'
-__lastmodified__ = '2023-11-28'
+__lastmodified__ = '2024-02-08'
 
 # Flags to check if pressure level has been reached
-FLAGS = { '925mb': False, '850mb': False, '700mb': False, '500mb': False, '400mb': False, 
-          '300mb': False, '250mb': False, '200mb': False, '150mb': False, '100mb': False,
-           '70mb': False,  '50mb': False,  '30mb': False,  '20mb': False,  '10mb': False }
+FLAGS = { '850mb': False, '700mb': False, '500mb': False, '400mb': False, 
+          '300mb': False, '200mb': False, '100mb': False, '70mb': False }
 
 def plot_data():
     """

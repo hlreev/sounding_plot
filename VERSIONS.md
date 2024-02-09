@@ -1,9 +1,12 @@
 # Sounding Plot Viewer Patches and Updates
 All versions of Sounding Plot Viewer will be documented here, along with the changelog and bug fixes
 
-## Version 1.1.1 (Date Finished - ??/??/????)
-- Adjusted how the moist adiabatic lapse rate is calculated for the parcel trace
+## Version 1.2.0 (Date Finished - 02/07/2024)
 - Changed the y-axis tick marks on the sounding to match the SPC sounding page
+- Refactored some code and removed old code/cleaned up comments
+- Reworked how soundings are generated and plotted, now uses Metpy for this
+- Add wind barbs to the sounding to see in the viewer along side the trajectory
+- Change the mandatory levels to reflect the sounding (except for success, messages, and termination)
 - Minor changes and tweaks
 
 ## Version 1.1.0 (Date Finished - 01/30/2024)

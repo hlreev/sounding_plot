@@ -6,6 +6,7 @@
 - pandas == 1.5.2
 - geopandas == 0.12.2
 - progress == 1.6.0
+- metpy == 1.6.1
 
 ## Setup Environment for the Project
 - It is recommended that you set up a conda environment.

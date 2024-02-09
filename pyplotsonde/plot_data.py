@@ -5,14 +5,16 @@ Plots 2D data points of a weather balloon on an advanced map with streetview dat
 '''
 
 # Imports
+import numpy as np
 import matplotlib.pyplot as plt
 import folium as fm
-import numpy as np
+import metpy.calc as mpcalc
 
 # Modules
-from pyplotsonde.thermo import plot_parcel_trace
 from pyplotsonde.logger import debug
 from pyplotsonde.file_paths import LEVEL1_DIRECTORY, GEOJSON_PATH, SOUNDING_PATH, COMPASS_ROSE_PATH
+from metpy.plots import SkewT
+from metpy.units import units
 
 # Global Settings
 _color = 'blue'
@@ -60,6 +62,7 @@ def add_sounding_marker(sounding_plot, current_sounding):
     html = '<img src="data:image/png;base64,{}">'.format
     iframe = IFrame(html(encoded.decode('UTF-8')), width = 670, height = 650)
     popup = fm.Popup(iframe, max_width = 800)
+    
     fm.Marker(location = _fwd, tooltip = "Click to show sounding.", popup = popup, icon = fm.Icon(color = 'gray')).add_to(sounding_plot)
 
 def save_skewt_sounding(cleaned_name):
@@ -70,48 +73,47 @@ def save_skewt_sounding(cleaned_name):
     """
 
     current_sounding = SOUNDING_PATH + cleaned_name + '.png'
+
     plt.savefig(current_sounding)
     plt.close()
 
     return current_sounding
 
-def plot_skewt(temp_C, dewp_C, pres, cleanedName):
+def plot_skewt(temp_C, dewp_C, pres, w_speed, w_direction, cleanedName):
     """
     Helper Function
 
-    Plot the SkewT sounding.
+    Plot the full Skew-T sounding.
     """
-        
-    # Imports
-    from classes.SkewT import register_projection, SkewXAxes
 
-    # Register the projection for the SkewT plot
-    register_projection(SkewXAxes)
     # Clean name further for use in title
     soundingName = cleanedName.replace('_', '/')
     # Create a new figure. The dimensions here give a good aspect ratio
     fig = plt.figure(figsize = (6.5875, 6.2125))
-    ax = fig.add_subplot(111, projection = "skewx")
-    # Add the grid and title
-    plt.grid(True, ls = '--')
+    skew = SkewT(fig, rotation = 45)
+    # Add the temperature and dew point data
+    skew.plot(pres, temp_C, 'r')
+    skew.plot(pres, dewp_C, 'g')
+    # Plot the parcel trace starting at the surface
+    profile = mpcalc.parcel_profile(pres, temp_C[0], dewp_C[0])
+    skew.plot(pres, profile, color = 'brown', linestyle = 'dashed', linewidth = 2)
+    # Add wind barbs to the sounding
+    u, v = mpcalc.wind_components(w_speed, w_direction)
+    interval = np.logspace(2, 3, 20) * units.hPa # Adjust the interval wind barbs are placed at
+    index = mpcalc.resample_nn_1d(pres, interval)
+    skew.plot_barbs(pressure = pres[index], u = u[index], v = v[index])
+    # Set some limits and tick marks
+    skew.ax.set_yticks([1000, 850, 700, 500, 300, 200, 100])
+    skew.ax.set_ylim(1050, 100)
+    skew.ax.set_xlim(-40, 50)
+    # Add labels for the X and Y axis
+    skew.ax.set_xlabel(f'Temperature ({temp_C.units:~P})')
+    skew.ax.set_ylabel(f'Pressure ({pres.units:~P})')
+    # Add the lines for 0C and -20C
+    skew.ax.axvline(0, color = 'b', linestyle = (0, (5, 10)), linewidth = 1)
+    skew.ax.axvline(-20, color = 'b', linestyle = (0, (5, 10)), linewidth = 1)  
+    # Add the title for the sounding
     plt.title(' FWD ' + soundingName + ' (Observed)', fontsize = 14, loc = 'left')
-    # Plot parcel trace and LCL
-    parcel_trace = plot_parcel_trace(temp_C, dewp_C, pres)
-    # Plot data using the log-p axes
-    ax.semilogy(temp_C, pres, color = 'red', lw = 2)
-    ax.semilogy(dewp_C, pres, color = 'green', lw = 2)
-    ax.plot([entry['temperature'] for entry in parcel_trace], [entry['pressure'] for entry in parcel_trace], color = "brown", ls = '--', lw = 2)
-    # Disables the log-formatting that comes with semilogy
-    ax.yaxis.set_major_formatter(plt.ScalarFormatter())
-    # Set tick marks for the sounding at each mandatory level
-    mandatory_levels = [1000, 850, 700, 500, 300, 200, 100]
-    ax.set_yticks(mandatory_levels)
-    ax.set_ylim(1050, 100)
-    ax.xaxis.set_major_locator(plt.MultipleLocator(10))
-    ax.set_xlim(-50, 50)
-    # Add lines for 0C and -20C (ice growth region)
-    ax.axvline(0, color = 'C0', ls = '--', lw = 1)
-    ax.axvline(-20, color = 'C0', ls = '--', lw = 1)
 
 def clean_up_name(file_name):
     """
@@ -128,7 +130,7 @@ def clean_up_name(file_name):
     if match:
         original_time = match.group(1)
         
-        # Hard-code specific cases: synoptic hours (does not account for DST, only standard lol)
+        # Convert hour to the next hours (as per release schedule, time in UTC)
         converted_hour = {
             '23': '0000',
             '00': '0100',
@@ -183,15 +185,7 @@ def plot_mandatory_points(index, pressureList, locationList, info, point, previo
     """
 
     # Plot the ascending balloon data points
-    if _flags['925mb'] == False:
-        # Sounding made it to 925mb
-        if pressureList[index] == 925.0 or (pressureList[index] >= 924.0 and pressureList[index] <= 926.0):
-            fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
-            icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon )
-            ).add_to(sounding_plot)
-            _flags['925mb'] = True
-    elif _flags['850mb'] == False:
+    if _flags['850mb'] == False:
         # Sounding made it to 850mb
         if pressureList[index] == 850.0 or (pressureList[index] >= 849.0 and pressureList[index] <= 851.0):
             fm.Marker(
@@ -231,14 +225,6 @@ def plot_mandatory_points(index, pressureList, locationList, info, point, previo
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             _flags['300mb'] = True
-    elif _flags['250mb'] == False:
-        # Sounding made it to 250mb
-        if pressureList[index] == 250.0 or (pressureList[index] >= 249.0 and pressureList[index] <= 251.0):
-            fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
-            icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
-            ).add_to(sounding_plot)
-            _flags['250mb'] = True
     elif _flags['200mb'] == False:
         # Sounding made it to 200mb
         if pressureList[index] == 200.0 or (pressureList[index] >= 199.0 and pressureList[index] <= 201.0):
@@ -247,14 +233,6 @@ def plot_mandatory_points(index, pressureList, locationList, info, point, previo
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             _flags['200mb'] = True
-    elif _flags['150mb'] == False:
-        # Sounding made it to 150mb
-        if pressureList[index] == 150.0 or (pressureList[index] >= 149.0 and pressureList[index] <= 151.0):
-            fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
-            icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
-            ).add_to(sounding_plot)
-            _flags['150mb'] = True
     elif _flags['100mb'] == False:
         # Sounding made it to 100mb
         if pressureList[index] == 100.0 or (pressureList[index] >= 99.0 and pressureList[index] <= 101.0):
@@ -271,38 +249,6 @@ def plot_mandatory_points(index, pressureList, locationList, info, point, previo
             icon = fm.Icon(color = 'cadetblue', icon_color = _iconcolor, icon = "glyphicon glyphicon-envelope")
             ).add_to(sounding_plot)
             _flags['70mb'] = True
-    elif _flags['50mb'] == False:
-        # Sounding made it to 50mb
-        if pressureList[index] == 50.0 or (pressureList[index] >= 29.0 and pressureList[index] <= 51.0):
-            fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
-            icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
-            ).add_to(sounding_plot)
-            _flags['50mb'] = True
-    elif _flags['30mb'] == False:
-        # Sounding made it to 30mb
-        if pressureList[index] == 30.0 or (pressureList[index] >= 29.0 and pressureList[index] <= 31.0):
-            fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
-            icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
-            ).add_to(sounding_plot)
-            _flags['30mb'] = True
-    elif _flags['20mb'] == False:
-        # Sounding made it to 20mb
-        if pressureList[index] == 20.0 or (pressureList[index] >= 19.0 and pressureList[index] <= 21.0):
-            fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
-            icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
-            ).add_to(sounding_plot)
-            _flags['20mb'] = True
-    elif _flags['10mb'] == False:
-        # Sounding made it to 10mb
-        if pressureList[index] == 10.0 or (pressureList[index] >= 9.0 and pressureList[index] <= 11.0):
-            fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
-            icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
-            ).add_to(sounding_plot)
-            _flags['10mb'] = True
     # This checks the absolute difference between the current and previous point, if its greater than 1 - its missing data there!
     if check_missing_data(point, previousPoint) != 1 and point != 9998: # Do not include the termination point
         global missingDataFlag
@@ -327,13 +273,16 @@ def plot_trajectory(location_list, pressure_list, points_list, sounding_plot, fl
     """
 
     size = len(location_list)
+    
     for index in range(0, size):
         point = points_list[index]
         if point == 1:
             previous_point = 0
         else:
             previous_point = points_list[index - 1]
+            
         info = str(pressure_list[index]) + 'mb'
+
         plot_mandatory_points(index, pressure_list, location_list, info, point, previous_point, sounding_plot, flags, current_file)
 
     fm.PolyLine(location_list, color = "grey", weight = "4").add_to(sounding_plot)
@@ -345,17 +294,33 @@ def parse_data(data):
     Parse data into required format for plotting.
     """
 
+    # Folium Map Data 
     locations = data[['Lat', 'Lon']]
     location_list = locations.values.tolist()
     pressures = data['P']
     pressure_list = pressures.values.tolist()
     points = data['n']
     points_list = points.values.tolist()
-    temp_C = data['Temp']
-    dewp_C = data['Dewp']
-    pres = data['P']
 
-    return location_list, pressure_list, points_list, temp_C, dewp_C, pres
+    # Sounding Data
+    temp_C = data['Temp'].tolist() * units('degC')
+    dewp_C = data['Dewp'].tolist() * units('degC')
+    pres = data['P'].tolist() * units('hPa')
+
+    # Wind Data
+    raw_speed = data['Speed'].tolist() # Raw wind speed in m/s
+    w_speed = [index * 1.94384 for index in raw_speed] * units('knots') # Convert to knots
+    w_direction = data['Dir'].tolist() * units('degrees')
+
+    # Clean the data further by removing unnecessary duplicate pressure levels
+    non_dups = np.concatenate(([True], np.diff(pres) != 0))
+    temp_C = temp_C[non_dups]
+    dewp_C = dewp_C[non_dups]
+    pres = pres[non_dups]
+    w_speed = w_speed[non_dups]
+    w_direction = w_direction[non_dups]
+
+    return location_list, pressure_list, points_list, temp_C, dewp_C, pres, w_speed, w_direction
 
 def create_basemap():
     """
@@ -413,12 +378,12 @@ def generate_plots(files, flags, progress_bar):
     for current_file in files:
         data, file_name = read_data(current_file)
         sounding_plot = create_basemap()
-        location_list, pressure_list, points_list, temp_C, dewp_C, pres = parse_data(data)
+        location_list, pressure_list, points_list, temp_C, dewp_C, pres, w_speed, w_direction = parse_data(data)
 
         if len(data) >= 1500:
             plot_trajectory(location_list, pressure_list, points_list, sounding_plot, flags, current_file)
             cleaned_name = clean_up_name(file_name)
-            plot_skewt(temp_C, dewp_C, pres, cleaned_name)
+            plot_skewt(temp_C, dewp_C, pres, w_speed, w_direction, cleaned_name)
             current_sounding = save_skewt_sounding(cleaned_name)
             add_sounding_marker(sounding_plot, current_sounding)
             save_trajectory_html(sounding_plot, cleaned_name)
