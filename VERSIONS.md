@@ -7,6 +7,7 @@ All versions of Sounding Plot Viewer will be documented here, along with the cha
 - Reworked how soundings are generated and plotted, now uses Metpy for this
 - Add wind barbs to the sounding to see in the viewer along side the trajectory
 - Change the mandatory levels to reflect the sounding (except for success, messages, and termination)
+- Minor adjustments to tooltips at the mandatory levels
 - Minor changes and tweaks
 
 ## Version 1.1.0 (Date Finished - 01/30/2024)

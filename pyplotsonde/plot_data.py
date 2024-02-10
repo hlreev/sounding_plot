@@ -189,7 +189,7 @@ def plot_mandatory_points(index, pressureList, locationList, info, point, previo
         # Sounding made it to 850mb
         if pressureList[index] == 850.0 or (pressureList[index] >= 849.0 and pressureList[index] <= 851.0):
             fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
+            locationList[index], popup = info, tooltip = "850mb",
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon )
             ).add_to(sounding_plot)
             _flags['850mb'] = True
@@ -197,7 +197,7 @@ def plot_mandatory_points(index, pressureList, locationList, info, point, previo
         # Sounding made it to 700mb
         if pressureList[index] == 700.0 or (pressureList[index] >= 699.0 and pressureList[index] <= 701.0):
             fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
+            locationList[index], popup = info, tooltip = "700mb",
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             _flags['700mb'] = True
@@ -205,7 +205,7 @@ def plot_mandatory_points(index, pressureList, locationList, info, point, previo
         # Sounding made it to 500mb
         if pressureList[index] == 500.0 or (pressureList[index] >= 499.0 and pressureList[index] <= 501.0):
             fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
+            locationList[index], popup = info, tooltip = "500mb",
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             _flags['500mb'] = True
@@ -221,7 +221,7 @@ def plot_mandatory_points(index, pressureList, locationList, info, point, previo
         # Sounding made it to 300mb
         if pressureList[index] == 300.0 or (pressureList[index] >= 299.0 and pressureList[index] <= 301.0):
             fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
+            locationList[index], popup = info, tooltip = "300mb",
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             _flags['300mb'] = True
@@ -229,7 +229,7 @@ def plot_mandatory_points(index, pressureList, locationList, info, point, previo
         # Sounding made it to 200mb
         if pressureList[index] == 200.0 or (pressureList[index] >= 199.0 and pressureList[index] <= 201.0):
             fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
+            locationList[index], popup = info, tooltip = "200mb",
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             _flags['200mb'] = True
@@ -237,7 +237,7 @@ def plot_mandatory_points(index, pressureList, locationList, info, point, previo
         # Sounding made it to 100mb
         if pressureList[index] == 100.0 or (pressureList[index] >= 99.0 and pressureList[index] <= 101.0):
             fm.Marker(
-            locationList[index], popup = info, tooltip = "Mandatory Level",
+            locationList[index], popup = info, tooltip = "100mb",
             icon = fm.Icon(color = _color, icon_color = _iconcolor, icon = _icon)
             ).add_to(sounding_plot)
             _flags['100mb'] = True
