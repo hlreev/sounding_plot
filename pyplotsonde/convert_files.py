@@ -51,6 +51,7 @@ def open_files(txtFiles, progressBar):
 
     # Get the number of files in the level 1 directory
     csvSize = len(os.listdir(LEVEL1_DIRECTORY))
+
     # Check to see if the files have already been processed
     if (csvSize == 0):
         # Process txt files to csv files
@@ -79,6 +80,7 @@ def process_level0_files(fout, fp, progressBar):
 
     # Read all of the lines in the raw *.txt file
     lines = fp.readlines()
+
     # Go through the level0 data
     for row in lines:
         # Remove the space between 'Elapsed' and 'time' from the columns
@@ -89,6 +91,7 @@ def process_level0_files(fout, fp, progressBar):
             # Repace the spaces with commas for *.csv reading
             fout.write(','.join(row.split()))
             fout.write('\n')
+            
     # Continue the progress bar to the next state in the terminal console after each file is processed
     progressBar.next()
     # Close the file stream
@@ -106,6 +109,7 @@ def convert_to_csv(txtFiles):
     txtSize = len(txtFiles)
     # Directory holding all of the *.csv files
     csvFiles = os.listdir(LEVEL1_DIRECTORY)
+    
     # Check for when there are no files to convert in the level 0 directory
     if txtSize == 0:
         # Return - flag for checking if there were files or not

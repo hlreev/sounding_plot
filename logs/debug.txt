@@ -1,2 +1,5 @@
-[2024-02-09 13:49:35] [INFO] Your files have been successfully processed. They are now being plotted.
-[2024-02-09 13:49:36] [INFO] The plots and soundings for all successful releases have been generated.
+[2024-04-22 16:39:33] [INFO] Files have been successfully deleted from all directories.
+[2024-04-22 16:39:40] [INFO] Your files have been successfully processed. They are now being plotted.
+[2024-04-22 16:39:41] [ERROR] The radiosonde data in 'edt_20230601_2302.csv' was not successful to 400mb. The data will not be plotted.
+[2024-04-22 16:39:43] [WARNING] Missing data found in 'edt_20230603_2317.csv'
+[2024-04-22 16:40:31] [INFO] The plots and soundings for all successful releases have been generated.

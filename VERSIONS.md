@@ -1,6 +1,10 @@
 # Sounding Plot Viewer Patches and Updates
 All versions of Sounding Plot Viewer will be documented here, along with the changelog and bug fixes
 
+## Version 1.2.1 (Date Finished - 04/22/2024)
+- Removed unnecessary files
+- Minor changes and tweaks
+
 ## Version 1.2.0 (Date Finished - 02/07/2024)
 - Changed the y-axis tick marks on the sounding to match the SPC sounding page
 - Refactored some code and removed old code/cleaned up comments

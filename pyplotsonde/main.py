@@ -10,6 +10,7 @@ Version History can be found in VERSIONS.md
 
 # Imports
 from progress.bar import IncrementalBar
+import os
 
 # Modules/Classes
 from pyplotsonde.convert_files import find_files, open_files
@@ -80,6 +81,7 @@ def main():
     """
 
     try:
+        os.system('cls' if os.name == 'nt' else 'clear')
         process_data()
         plot_data()
     except FileNotFoundError as error:
